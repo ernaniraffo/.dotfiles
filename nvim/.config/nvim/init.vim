@@ -17,6 +17,7 @@ set shiftwidth=4
 
 " adds line numbers
 set number
+set relativenumber
 
 " columns used for the line number
 set numberwidth=4
@@ -61,7 +62,7 @@ set signcolumn=number
 call plug#begin('~/.config/nvim/plugged')
 
 " color scheme
-"Plug 'gruvbox-community/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 "Plug 'tanvirtin/monokai.nvim'
 Plug 'sickill/vim-monokai'
 
@@ -96,6 +97,10 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 call plug#end()
 
 lua require('eraffo')
+
+let g:lightline = {
+            \ 'colorscheme': 'molokai',
+            \ }
 
 " declare your color scheme
 colorscheme monokai

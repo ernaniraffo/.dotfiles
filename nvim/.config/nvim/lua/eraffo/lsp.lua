@@ -47,7 +47,34 @@ cmp.setup {
 	formatting = {
 		format = lspkind.cmp_format({
             mode = 'symbol_text',
-            maxwidth = 50
+            maxwidth = 50,
+            symbol_map = {
+                Text = "",
+                Method = "",
+                Function = "",
+                Constructor = "",
+                Field = "ﰠ",
+                Variable = "",
+                Class = "ﴯ",
+                Interface = "",
+                Module = "",
+                Property = "ﰠ",
+                Unit = "塞",
+                Value = "",
+                Enum = "ﬥ",
+                Keyword = "",
+                Snippet = "",
+                Color = "",
+                File = "",
+                Reference = "",
+                Folder = "",
+                EnumMember = "ﬥ",
+                Constant = "",
+                Struct = "פּ",
+                Event = "",
+                Operator = "",
+                TypeParameter = ""
+            },
         })
 	},
 	mapping = {
