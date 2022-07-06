@@ -48,23 +48,24 @@ set mouse=a
 set ignorecase
 set smartcase
 
-" Insert open/closing parentheses, then enter insert mode in-between.
-inoremap (<cr> (<cr>)<esc>O
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+
 " Insert open/closing braces, then enter insert mode in-between.
 inoremap {<cr> {<cr>}<esc>O
-" Same as above, but for structs in C.
-inoremap {;<cr> {<cr>};<esc>O
-" Same as above, but for Javascript
-inoremap (;<cr> (<cr>);<esc>O
 
 set signcolumn=number
 
 call plug#begin('~/.config/nvim/plugged')
 
 " color scheme
-Plug 'gruvbox-community/gruvbox'
+"Plug 'gruvbox-community/gruvbox'
 "Plug 'tanvirtin/monokai.nvim'
-Plug 'sickill/vim-monokai'
+"Plug 'sickill/vim-monokai'
+"Plug 'olimorris/onedarkpro.nvim'
+Plug 'arcticicestudio/nord-vim'
 
 " Telescope requires plenary to function
 Plug 'nvim-lua/plenary.nvim'
@@ -99,10 +100,11 @@ call plug#end()
 lua require('eraffo')
 
 let g:lightline = {
-            \ 'colorscheme': 'molokai',
+            \ 'colorscheme': 'nord',
             \ }
 
 " declare your color scheme
-colorscheme monokai
+colorscheme nord
+
 " Use this for dark color schemes
-set background=dark
+"set background=dark
