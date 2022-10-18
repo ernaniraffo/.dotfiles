@@ -2,6 +2,9 @@
 export PROMPT="%F{magenta}%n%f:%1~ $ "
 export CLICOLOR=1
 
+# zsh aliases
+alias zshrc='vi ~/.zshrc'
+
 # python aliases
 alias python='python3'
 
