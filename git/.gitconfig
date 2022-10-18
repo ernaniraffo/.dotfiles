@@ -1,0 +1,7 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Ernani Raffo
+	email = eraffo@ucsc.edu
+# Please adapt and uncomment the following lines:
+#	name = Ernani Raffo
+#	email = ernani.raffo@icloud.com

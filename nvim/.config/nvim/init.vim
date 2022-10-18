@@ -1,9 +1,3 @@
-" enables syntax highlighting
-syntax on
-
-" Better colors
-"set termguicolors
-
 " number of spaces in a <Tab>
 set tabstop=4
 set softtabstop=4
@@ -53,6 +47,7 @@ inoremap ' ''<left>
 inoremap ( ()<left>
 inoremap [ []<left>
 
+" Insert open/closing parentheses, then enter insert mode in-between.
 " Insert open/closing braces, then enter insert mode in-between.
 inoremap {<cr> {<cr>}<esc>O
 
@@ -61,11 +56,7 @@ set signcolumn=number
 call plug#begin('~/.config/nvim/plugged')
 
 " color scheme
-"Plug 'gruvbox-community/gruvbox'
-"Plug 'tanvirtin/monokai.nvim'
-"Plug 'sickill/vim-monokai'
-"Plug 'olimorris/onedarkpro.nvim'
-Plug 'arcticicestudio/nord-vim'
+Plug 'sainnhe/gruvbox-material'
 
 " Telescope requires plenary to function
 Plug 'nvim-lua/plenary.nvim'
@@ -74,6 +65,7 @@ Plug 'nvim-telescope/telescope.nvim'
 " An optional plugin recommended by Telescope docs
 Plug 'nvim-telescope/telescope-fzf-native.nvim', {'do': 'make' }
 
+" lightline
 Plug 'itchyny/lightline.vim'
 
 " vim-fugitive
@@ -99,12 +91,13 @@ call plug#end()
 
 lua require('eraffo')
 
-let g:lightline = {
-            \ 'colorscheme': 'nord',
-            \ }
+let g:lightline = {'colorscheme' : 'gruvbox_material'}
 
-" declare your color scheme
-colorscheme nord
+syntax on
 
-" Use this for dark color schemes
-"set background=dark
+let g:gruvbox_material_disable_italic_comment = 1
+let g:gruvbox_material_transparent_background = 1
+let g:gruvbox_material_background = 'hard'
+colorscheme gruvbox-material
+
+set background=dark
