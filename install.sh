@@ -42,7 +42,7 @@ function install_on_macOS() {
 
 function install_on_ubuntu() {
     # check if running as root
-    if [[ $(id -u) != 0]]; then
+    if [[ $(id -u) != 0 ]]; then
         echo "Please run as root"
         echo "Usage: sudo $0 ubuntu"
         exit
