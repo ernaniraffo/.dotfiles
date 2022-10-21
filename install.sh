@@ -27,12 +27,24 @@ function nvim_plugins() {
 }
 
 function install_on_macOS() {
+    # install neovim
     brew install nvim
+
+    # install vim-plug
+    brew install curl
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    
+    # install plugins
+    nvim_plugins
+
+    # stow git and zsh
     brew install git
     brew install stow
     stow_packages
     stow zsh
-    nvim_plugins
+
+    # install clangd
     brew install llvm
 }
 
@@ -44,18 +56,21 @@ function install_on_ubuntu() {
         exit
     fi
 
+    # install neovim + plugins
     ubuntu_nvim
+    nvim_plugins
+
+    # install git and stow
     apt install git
     apt install stow
     stow_packages
-    nvim_plugins
     
     # install clangd language server
     apt-get install clangd-12
 }
 
 function usage() {
-    echo "Usage: $0 --[mac, ubuntu]"
+    echo "Usage: $0 [mac, ubuntu]"
 }
 
 if [[ $# -gt 2 ]];  then
