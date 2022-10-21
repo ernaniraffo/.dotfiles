@@ -1,16 +1,22 @@
 #/bin/bash
 
+# root  = ""
+# !root = $(sudo)
+PRIV=""
+
 function ubuntu_nvim() {
     # install neovim
-    sudo apt install neovim
-    sudo apt install python3-neovim
-    sudo apt-get install software-properties-common
-    sudo add-apt-repository ppa:neovim-ppa/stable
-    sudo apt-get update
-    # install again just in case
-    sudo apt-get install neovim
+    apt install neovim
+    apt install python3-neovim
+    apt-get install software-properties-common
+    add-apt-repository ppa:neovim-ppa/stable
+    apt-get update
+    
+    # install newest version
+    apt-get install neovim
+    
     # vim-plug install needs curl
-    sudo apt install curl
+    apt install curl
     sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 }
@@ -35,13 +41,21 @@ function install_on_macOS() {
 }
 
 function install_on_ubuntu() {
+    # check if running as root
+    if [[ $(id -u) != 0]]; then
+        echo "Please run as root"
+        echo "Usage: sudo $0 ubuntu"
+        exit
+    fi
+
     ubuntu_nvim
-    sudo apt install git
-    sudo apt install stow
+    apt install git
+    apt install stow
     stow_packages
     nvim_plugins
+    
     # install clangd language server
-    sudo apt-get install clangd-12
+    apt-get install clangd-12
 }
 
 function usage() {
