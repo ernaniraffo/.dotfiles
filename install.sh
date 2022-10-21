@@ -1,9 +1,5 @@
 #/bin/bash
 
-# root  = ""
-# !root = $(sudo)
-PRIV=""
-
 function ubuntu_nvim() {
     # install neovim
     apt install neovim
