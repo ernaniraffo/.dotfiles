@@ -9,8 +9,10 @@ alias zshrc='vi ~/.zshrc'
 alias python='python3'
 
 # cd aliases
-alias cse111='cd ~/Desktop/school/fall22/cse111/'
-alias school='cd ~/Desktop/school/'
+alias cs='cd ~/Desktop/school/fall22/cse111/'
+alias cmpm='cd ~/Desktop/school/fall22/cmpm176'
+alias ge='cd ~/Desktop/school/fall22/socy15'
+alias ucsc='cd ~/Desktop/school/'
 
 # diff aliases
 alias diff='colordiff'
@@ -19,7 +21,7 @@ alias diff='colordiff'
 alias ll="ls -l"
 alias lo="ls -lo"
 alias lt="ls -lt"
-alias la="ls -a"
+alias la="ls -al"
 
 # VIM aliases
 alias vim='nvim'
