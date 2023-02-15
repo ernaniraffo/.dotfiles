@@ -1,5 +1,6 @@
 require('eraffo/telescope')
-require('eraffo/lightline')
+require('eraffo/lualine')
+--require('eraffo/lightline')
 --require('eraffo/gitsigns')
 require('eraffo/lsp')
 require('eraffo/treesitter')

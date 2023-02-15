@@ -11,7 +11,6 @@ set shiftwidth=4
 
 " adds line numbers
 set number
-set relativenumber
 
 " columns used for the line number
 set numberwidth=4
@@ -47,7 +46,6 @@ inoremap ' ''<left>
 inoremap ( ()<left>
 inoremap [ []<left>
 
-" Insert open/closing parentheses, then enter insert mode in-between.
 " Insert open/closing braces, then enter insert mode in-between.
 inoremap {<cr> {<cr>}<esc>O
 
@@ -57,6 +55,8 @@ call plug#begin('~/.config/nvim/plugged')
 
 " color scheme
 Plug 'sainnhe/gruvbox-material'
+Plug 'sainnhe/sonokai'
+Plug 'projekt0n/github-nvim-theme', { 'tag': 'v0.0.7' }
 
 " Telescope requires plenary to function
 Plug 'nvim-lua/plenary.nvim'
@@ -65,8 +65,8 @@ Plug 'nvim-telescope/telescope.nvim'
 " An optional plugin recommended by Telescope docs
 Plug 'nvim-telescope/telescope-fzf-native.nvim', {'do': 'make' }
 
-" lightline
 Plug 'itchyny/lightline.vim'
+Plug 'nvim-lualine/lualine.nvim'
 
 " vim-fugitive
 Plug 'tpope/vim-fugitive'
@@ -91,13 +91,17 @@ call plug#end()
 
 lua require('eraffo')
 
-let g:lightline = {'colorscheme' : 'gruvbox_material'}
+" Important!!
+if has('termguicolors')
+    set termguicolors
+endif
+
+let g:github_theme_style = "dark_default"
+let g:github_transparent = "true"
+let g:github_keyword_style = "NONE"
+let g:github_comment_style = "NONE"
 
 syntax on
-
-let g:gruvbox_material_disable_italic_comment = 1
-let g:gruvbox_material_transparent_background = 1
-let g:gruvbox_material_background = 'hard'
-colorscheme gruvbox-material
+colorscheme github_dark_default
 
 set background=dark

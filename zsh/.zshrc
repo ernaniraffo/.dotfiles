@@ -1,5 +1,5 @@
 # Terminal colors
-export PROMPT="%F{magenta}%n%f:%1~ $ "
+export PROMPT="%F{magenta}%n%f:%~ $ "
 export CLICOLOR=1
 
 # zsh aliases
@@ -9,10 +9,9 @@ alias zshrc='vi ~/.zshrc'
 alias python='python3'
 
 # cd aliases
-alias cs='cd ~/Desktop/school/fall22/cse111/'
-alias cmpm='cd ~/Desktop/school/fall22/cmpm176'
-alias ge='cd ~/Desktop/school/fall22/socy15'
-alias ucsc='cd ~/Desktop/school/'
+alias cmpm='cd ~/Desktop/school/winter23/cmpm163'
+alias ucsc='cd ~/Desktop/ucsc/'
+alias tutor='cd ~/Desktop/ucsc/tutor'
 
 # diff aliases
 alias diff='colordiff'
@@ -28,9 +27,6 @@ alias vim='nvim'
 alias vi='nvim'
 alias init.vim="vi ~/.dotfiles/nvim/.config/nvim/init.vim"
 
-# Docker aliases
-alias ds='docker start -ai cse111'
-alias do='open -a docker'
-
 # Added by Amplify CLI binary installer
 export PATH="$HOME/.amplify/bin:$PATH"
+
