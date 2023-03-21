@@ -91,17 +91,15 @@ call plug#end()
 
 lua require('eraffo')
 
-" Important!!
 if has('termguicolors')
     set termguicolors
 endif
 
-let g:github_theme_style = "dark_default"
-let g:github_transparent = "true"
-let g:github_keyword_style = "NONE"
-let g:github_comment_style = "NONE"
+let g:sonokai_disable_italic_comment = 1
+let g:sonokai_transparent_background = 2
+let g:sonokai_better_performance = 1
 
 syntax on
-colorscheme github_dark_default
+colorscheme sonokai
 
 set background=dark
