@@ -95,11 +95,11 @@ if has('termguicolors')
     set termguicolors
 endif
 
-let g:sonokai_disable_italic_comment = 1
-let g:sonokai_transparent_background = 2
-let g:sonokai_better_performance = 1
-
 syntax on
-colorscheme sonokai
+
+let g:gruvbox_material_disable_italic_comment = 1
+let g:gruvbox_material_transparent_background = 1
+let g:gruvbox_material_background = 'hard'
+colorscheme gruvbox-material
 
 set background=dark
