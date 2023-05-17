@@ -91,15 +91,15 @@ call plug#end()
 
 lua require('eraffo')
 
-if has('termguicolors')
-    set termguicolors
-endif
+""if has('termguicolors')
+""    set termguicolors
+""endif
 
 syntax on
 
-let g:gruvbox_material_disable_italic_comment = 1
-let g:gruvbox_material_transparent_background = 1
-let g:gruvbox_material_background = 'hard'
-colorscheme gruvbox-material
+""let g:gruvbox_material_disable_italic_comment = 1
+""let g:gruvbox_material_transparent_background = 1
+""let g:gruvbox_material_background = 'hard'
+""colorscheme gruvbox-material
 
 set background=dark
