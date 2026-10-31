@@ -5,10 +5,9 @@ nvim/.config/nvim/plugged/*
 .DS_Store
 *.un~
 
-# App configs under ~/.config (which is stowed from nvim/.config) that
-# should not be tracked: machine-specific caches or credentials.
-nvim/.config/gh/
-nvim/.config/htop/
-nvim/.config/iterm2/
-nvim/.config/xbuild/
-nvim/.config/Unreal Engine/
+# ~/.config is a symlink to nvim/.config, so every app that writes there
+# (gh, gcloud, copilot, ...) lands in this public repo. Ignore everything
+# by default and only allow the configs we actually track.
+nvim/.config/*
+!nvim/.config/nvim/
+!nvim/.config/yapf/

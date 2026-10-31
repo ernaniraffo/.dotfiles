@@ -2,17 +2,17 @@
 
 function ubuntu_nvim() {
     # install neovim
-    apt install neovim
-    apt install python3-neovim
-    apt-get install software-properties-common
-    add-apt-repository ppa:neovim-ppa/stable
-    apt-get update
+    sudo apt install neovim
+    sudo apt install python3-neovim
+    sudo apt-get install software-properties-common
+    sudo add-apt-repository ppa:neovim-ppa/stable
+    sudo apt-get update
     
     # install newest version
-    apt-get install neovim
+    sudo apt-get install neovim
     
     # vim-plug install needs curl
-    apt install curl
+    sudo apt install curl
     sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 }
@@ -49,25 +49,27 @@ function install_on_macOS() {
 }
 
 function install_on_ubuntu() {
-    # check if running as root
-    if [[ $(id -u) != 0 ]]; then
-        echo "Please run as root"
-        echo "Usage: sudo $0 ubuntu"
-        exit
+    # Run as your normal user: only the package installs use sudo, so stow,
+    # vim-plug and plugin builds don't run third-party code as root or write
+    # root-owned files into $HOME.
+    if [[ $(id -u) == 0 ]]; then
+        echo "Please run as your normal user (not root/sudo)"
+        echo "Usage: $0 ubuntu"
+        exit 1
     fi
 
     # install neovim + plugins
     ubuntu_nvim
 
     # install git and stow (before installing plugins, so the nvim config exists)
-    apt install git
-    apt install stow
+    sudo apt install git
+    sudo apt install stow
     stow_packages
 
     nvim_plugins
     
     # install clangd language server
-    apt-get install clangd-12
+    sudo apt-get install clangd-12
 }
 
 function usage() {
