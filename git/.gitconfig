@@ -1,4 +1,11 @@
 # This is Git's per-user configuration file.
 [user]
-	name = ernaniraffo
+	name = Ernani Raffo
 	email = ernani.raffo@icloud.com
+[color]
+	ui = auto
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
