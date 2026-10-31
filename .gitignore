@@ -1,2 +1,14 @@
 # Neovim Plugins
 nvim/.config/nvim/plugged/*
+
+# macOS / editor junk
+.DS_Store
+*.un~
+
+# App configs under ~/.config (which is stowed from nvim/.config) that
+# should not be tracked: machine-specific caches or credentials.
+nvim/.config/gh/
+nvim/.config/htop/
+nvim/.config/iterm2/
+nvim/.config/xbuild/
+nvim/.config/Unreal Engine/
