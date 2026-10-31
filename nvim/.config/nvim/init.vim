@@ -1,3 +1,9 @@
+" cache compiled Lua modules (faster startup)
+lua vim.loader.enable()
+
+" turn off cursor styling
+set guicursor=
+
 " number of spaces in a <Tab>
 set tabstop=4
 set softtabstop=4
@@ -18,8 +24,6 @@ set numberwidth=4
 " highlights the matched text pattern when searching
 set incsearch
 set nohlsearch
-
-set noshowmode
 
 " open splits intuitively
 set splitbelow
@@ -53,11 +57,6 @@ set signcolumn=number
 
 call plug#begin('~/.config/nvim/plugged')
 
-" color scheme
-Plug 'sainnhe/gruvbox-material'
-Plug 'sainnhe/sonokai'
-Plug 'projekt0n/github-nvim-theme', { 'tag': 'v0.0.7' }
-
 " Telescope requires plenary to function
 Plug 'nvim-lua/plenary.nvim'
 " The main Telescope plugin
@@ -65,8 +64,7 @@ Plug 'nvim-telescope/telescope.nvim'
 " An optional plugin recommended by Telescope docs
 Plug 'nvim-telescope/telescope-fzf-native.nvim', {'do': 'make' }
 
-Plug 'itchyny/lightline.vim'
-Plug 'nvim-lualine/lualine.nvim'
+""Plug 'itchyny/lightline.vim'
 
 " vim-fugitive
 Plug 'tpope/vim-fugitive'
@@ -90,16 +88,3 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 call plug#end()
 
 lua require('eraffo')
-
-""if has('termguicolors')
-""    set termguicolors
-""endif
-
-syntax on
-
-""let g:gruvbox_material_disable_italic_comment = 1
-""let g:gruvbox_material_transparent_background = 1
-""let g:gruvbox_material_background = 'hard'
-""colorscheme gruvbox-material
-
-set background=dark
