@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 function ubuntu_nvim() {
     # install neovim
@@ -32,17 +32,17 @@ function install_on_macOS() {
 
     # install vim-plug
     brew install curl
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    
-    # install plugins
-    nvim_plugins
 
-    # stow git and zsh
+    # stow git and zsh (before installing plugins, so the nvim config exists)
     brew install git
     brew install stow
     stow_packages
     stow zsh
+
+    # install plugins
+    nvim_plugins
 
     # install clangd
     brew install llvm
@@ -58,12 +58,13 @@ function install_on_ubuntu() {
 
     # install neovim + plugins
     ubuntu_nvim
-    nvim_plugins
 
-    # install git and stow
+    # install git and stow (before installing plugins, so the nvim config exists)
     apt install git
     apt install stow
     stow_packages
+
+    nvim_plugins
     
     # install clangd language server
     apt-get install clangd-12
@@ -73,7 +74,7 @@ function usage() {
     echo "Usage: $0 [mac, ubuntu]"
 }
 
-if [[ $# -gt 2 ]];  then
+if [[ $# -ne 1 ]]; then
     usage
 elif [[ $1 == "mac" ]]; then
     install_on_macOS

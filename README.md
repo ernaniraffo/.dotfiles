@@ -23,4 +23,4 @@ sudo apt install
 
 ## Neovim
 
-My configs at the moment require Neovim version 0.7.0+, so make sure the version matches or is above that.
+My configs at the moment require Neovim version 0.11+ (they use `vim.lsp.config`/`vim.lsp.enable`), so make sure the version matches or is above that.
