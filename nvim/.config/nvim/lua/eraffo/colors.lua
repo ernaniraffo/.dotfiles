@@ -1,34 +1,23 @@
--- Make Neovim blend into the terminal.
+-- Colorscheme, kept in sync with Ghostty by ghostty-theme-sync.nvim.
 --
--- The Terminal.app profile ("Ernani") uses a translucent, blurred dark
--- background (#212121 at 85% opacity) with green text. Neovim enables
--- termguicolors automatically, and the default colorscheme then paints an
--- opaque NvimDarkGrey background, so Neovim looked different from the shell.
--- Clearing the background (and Normal's foreground) on the main groups lets
--- the terminal's own background and text color show through.
--- Syntax highlighting still comes from the default colorscheme.
-
-vim.o.background = 'dark'
-
-local transparent = {
-    'Normal', 'NormalNC', 'NormalFloat', 'FloatBorder', 'FloatTitle',
-    'SignColumn', 'LineNr', 'CursorLineNr', 'FoldColumn', 'EndOfBuffer',
-    'MsgArea',
-}
-
-local function apply()
-    for _, group in ipairs(transparent) do
-        local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
-        hl.bg, hl.ctermbg = nil, nil
-        vim.api.nvim_set_hl(0, group, hl)
-    end
-    -- Use the terminal's own text color for regular text.
-    vim.api.nvim_set_hl(0, 'Normal', {})
-end
-
-vim.api.nvim_create_autocmd('ColorScheme', {
-    group = vim.api.nvim_create_augroup('eraffo_colors', { clear = true }),
-    callback = apply,
+-- :GhosttyTheme lists the themes that exist in both Neovim (installed
+-- colorschemes) and Ghostty, sets the picked one in Neovim, writes it to the
+-- Ghostty config, and rewrites the colorscheme line below so it persists.
+-- Reload Ghostty's config afterwards (cmd+shift+,) to apply it there.
+require('ghostty-theme-sync').setup({
+    ghostty_config_path = '~/Library/Application Support/com.mitchellh.ghostty/config.ghostty',
+    persist_nvim_theme = true,
+    nvim_config_path = vim.fn.stdpath('config') .. '/lua/eraffo/colors.lua',
 })
 
-apply()
+-- Kanagawa without italics (its defaults italicize comments, keywords and
+-- builtin variables like `self`).
+require('kanagawa').setup({
+    commentStyle = { italic = false },
+    keywordStyle = { italic = false },
+    overrides = function()
+        return { ['@variable.builtin'] = { italic = false } }
+    end,
+})
+
+vim.cmd.colorscheme('kanagawa-dragon')
