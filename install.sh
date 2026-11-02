@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# stow links packages into the parent of the repo (normally ~), so always run
+# from the repo itself, wherever the script was called from.
+cd "$(dirname "$0")" || exit 1
+TARGET=$(dirname "$PWD")
+
 function ubuntu_nvim() {
     # install neovim
     sudo apt install neovim
@@ -17,13 +22,46 @@ function ubuntu_nvim() {
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 }
 
+# Stow one package. Files that already exist where stow wants to link (a
+# ~/.zshrc or ~/.gitconfig made before the dotfiles) would make stow skip the
+# whole package, so move them aside first as <name>.pre-dotfiles.
+function stow_package() {
+    local pkg=$1 target
+    stow -n "$pkg" 2>&1 |
+        sed -n -e 's/.* over existing target \(.*\) since .*/\1/p' \
+               -e 's/.*existing target is not owned by stow: \(.*\)/\1/p' |
+        while read -r target; do
+            echo "Moving existing $TARGET/$target to $TARGET/$target.pre-dotfiles"
+            mv "$TARGET/$target" "$TARGET/$target.pre-dotfiles"
+        done
+    stow "$pkg"
+}
+
 function stow_packages() {
-    stow nvim
-    stow git
+    stow_package nvim  # also holds ~/.config/ghostty
+    stow_package git
 }
 
 function nvim_plugins() {
-    nvim --headless +PlugInstall +qall
+    # --sync: wait for every plugin to finish installing before quitting
+    nvim --headless "+PlugInstall --sync" +qall
+}
+
+function ghostty_macOS() {
+    if [[ ! -d /Applications/Ghostty.app ]]; then
+        brew install --cask ghostty
+    fi
+
+    # On macOS Ghostty also reads ~/Library/Application Support/com.mitchellh.ghostty,
+    # which overrides ~/.config/ghostty (from the dotfiles). Ghostty writes a
+    # template there on first launch, so move any config there aside.
+    local dir="$HOME/Library/Application Support/com.mitchellh.ghostty" f
+    for f in "$dir/config" "$dir/config.ghostty"; do
+        if [[ -f $f ]]; then
+            echo "Moving $f to $f.pre-dotfiles"
+            mv "$f" "$f.pre-dotfiles"
+        fi
+    done
 }
 
 function install_on_macOS() {
@@ -39,7 +77,10 @@ function install_on_macOS() {
     brew install git
     brew install stow
     stow_packages
-    stow zsh
+    stow_package zsh
+
+    # Ghostty terminal (its config comes from the nvim package above)
+    ghostty_macOS
 
     # nvim-treesitter (main branch) builds parsers with tree-sitter-cli
     brew install tree-sitter-cli
@@ -49,6 +90,8 @@ function install_on_macOS() {
 
     # install clangd
     brew install llvm
+
+    echo "Done. Restart Ghostty (or press cmd+shift+,) to load the new config."
 }
 
 function install_on_ubuntu() {

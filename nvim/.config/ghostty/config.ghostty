@@ -3,4 +3,4 @@
 #
 # The theme line is managed from Neovim by ghostty-theme-sync.nvim
 # (:GhosttyTheme), which rewrites it to match the Neovim colorscheme.
-theme = kanagawa dragon
+theme = Kanagawa Dragon

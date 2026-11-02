@@ -21,9 +21,14 @@ refuses to run as root.
 **macOS** (uses Homebrew):
 1. Installs Neovim and curl, then downloads [vim-plug](https://github.com/junegunn/vim-plug).
 2. Installs git and stow, then stows the `nvim`, `git` and `zsh` packages.
-3. Installs `tree-sitter-cli`, which nvim-treesitter needs to build parsers.
-4. Installs the Neovim plugins (`:PlugInstall`).
-5. Installs `llvm` (for the `clangd` language server).
+3. Installs [Ghostty](https://ghostty.org) if it isn't in `/Applications`, and
+   moves aside any config in `~/Library/Application Support/com.mitchellh.ghostty`
+   (it would override the dotfiles' `~/.config/ghostty/config.ghostty`).
+4. Installs `tree-sitter-cli`, which nvim-treesitter needs to build parsers.
+5. Installs the Neovim plugins (`:PlugInstall`).
+6. Installs `llvm` (for the `clangd` language server).
+
+Restart Ghostty afterwards (or press `cmd+shift+,`) to load its config.
 
 **Ubuntu** (uses apt):
 1. Installs Neovim from the `neovim-ppa/stable` PPA, `python3-neovim` and curl,
@@ -31,6 +36,10 @@ refuses to run as root.
 2. Installs git and stow, then stows the `nvim` and `git` packages (not `zsh`).
 3. Installs the Neovim plugins (`:PlugInstall`).
 4. Installs `clangd-12`.
+
+On both, files that already exist where stow wants to link (such as a
+`~/.zshrc` or `~/.gitconfig`) are moved aside as `<name>.pre-dotfiles` first,
+since stow would otherwise skip the whole package.
 
 The Ubuntu path does **not** install `tree-sitter-cli`. apt's version is
 likely older than the 0.26.1+ that nvim-treesitter requires, so install a
