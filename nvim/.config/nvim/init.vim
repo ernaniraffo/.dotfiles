@@ -82,6 +82,9 @@ Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'onsails/lspkind-nvim'
 
+" Smooth scrolling animation for <C-d>/<C-u>/<C-f>/<C-b>/<C-e>/<C-y>/zt/zz/zb
+Plug 'karb94/neoscroll.nvim'
+
 " Treesitter
 " main branch: the maintained rewrite (master is frozen). Needs tree-sitter-cli.
 Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
