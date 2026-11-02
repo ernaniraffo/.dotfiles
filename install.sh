@@ -5,6 +5,9 @@
 cd "$(dirname "$0")" || exit 1
 TARGET=$(dirname "$PWD")
 
+# --personal (macOS) also stows my own zsh config (aliases).
+PERSONAL=false
+
 function ubuntu_nvim() {
     # install neovim
     sudo apt install neovim
@@ -22,9 +25,9 @@ function ubuntu_nvim() {
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 }
 
-# Stow one package. Files that already exist where stow wants to link (a
-# ~/.zshrc or ~/.gitconfig made before the dotfiles) would make stow skip the
-# whole package, so move them aside first as <name>.pre-dotfiles.
+# Stow one package. Files that already exist where stow wants to link (e.g. a
+# ~/.zshrc made before the dotfiles) would make stow skip the whole package,
+# so move them aside first as <name>.pre-dotfiles.
 function stow_package() {
     local pkg=$1 target
     stow -n "$pkg" 2>&1 |
@@ -38,8 +41,15 @@ function stow_package() {
 }
 
 function stow_packages() {
+    # The git package was removed from the repo (it held my name/email); drop
+    # the ~/.gitconfig link an older install made to it, now pointing nowhere.
+    if [[ -L $TARGET/.gitconfig && ! -e $TARGET/.gitconfig &&
+          $(readlink "$TARGET/.gitconfig") == *.dotfiles/git/.gitconfig ]]; then
+        echo "Removing broken link $TARGET/.gitconfig (git config is no longer in the dotfiles)"
+        rm "$TARGET/.gitconfig"
+    fi
+
     stow_package nvim  # also holds ~/.config/ghostty
-    stow_package git
 }
 
 function nvim_plugins() {
@@ -73,11 +83,13 @@ function install_on_macOS() {
     curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-    # stow git and zsh (before installing plugins, so the nvim config exists)
+    # stow (before installing plugins, so the nvim config exists)
     brew install git
     brew install stow
     stow_packages
-    stow_package zsh
+    if $PERSONAL; then
+        stow_package zsh
+    fi
 
     # Ghostty terminal (its config comes from the nvim package above)
     ghostty_macOS
@@ -119,12 +131,18 @@ function install_on_ubuntu() {
 }
 
 function usage() {
-    echo "Usage: $0 [mac, ubuntu]"
+    echo "Usage: $0 [mac, ubuntu] [--personal]"
+    echo "  --personal  (mac) also stow my zsh config (personal aliases)"
 }
 
-if [[ $# -ne 1 ]]; then
+if [[ $# -eq 2 && $2 == "--personal" ]]; then
+    PERSONAL=true
+elif [[ $# -ne 1 ]]; then
     usage
-elif [[ $1 == "mac" ]]; then
+    exit 1
+fi
+
+if [[ $1 == "mac" ]]; then
     install_on_macOS
 elif [[ $1 == "ubuntu" ]]; then
     install_on_ubuntu
