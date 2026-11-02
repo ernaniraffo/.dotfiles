@@ -41,6 +41,9 @@ function install_on_macOS() {
     stow_packages
     stow zsh
 
+    # nvim-treesitter (main branch) builds parsers with tree-sitter-cli
+    brew install tree-sitter-cli
+
     # install plugins
     nvim_plugins
 
