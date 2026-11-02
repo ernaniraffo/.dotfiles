@@ -11,3 +11,4 @@ nvim/.config/nvim/plugged/*
 nvim/.config/*
 !nvim/.config/nvim/
 !nvim/.config/yapf/
+!nvim/.config/ghostty/

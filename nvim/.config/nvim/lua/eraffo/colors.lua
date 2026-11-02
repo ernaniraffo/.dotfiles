@@ -5,7 +5,7 @@
 -- Ghostty config, and rewrites the colorscheme line below so it persists.
 -- Reload Ghostty's config afterwards (cmd+shift+,) to apply it there.
 require('ghostty-theme-sync').setup({
-    ghostty_config_path = '~/Library/Application Support/com.mitchellh.ghostty/config.ghostty',
+    ghostty_config_path = '~/.config/ghostty/config.ghostty', -- tracked in dotfiles
     persist_nvim_theme = true,
     nvim_config_path = vim.fn.stdpath('config') .. '/lua/eraffo/colors.lua',
 })
