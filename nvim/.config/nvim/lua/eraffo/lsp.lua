@@ -6,7 +6,7 @@ vim.lsp.config('*', {
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
 })
 
-vim.lsp.enable({ 'clangd', 'pyright', 'texlab' })
+vim.lsp.enable({ 'clangd', 'pyright', 'perlnavigator' })
 
 -- Buffer-local keymaps whenever a server attaches.
 -- (on_attach is ignored by vim.lsp.enable, so these use LspAttach instead.)

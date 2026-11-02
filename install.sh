@@ -103,6 +103,12 @@ function install_on_macOS() {
     # install clangd
     brew install llvm
 
+    # language servers for Python (pyright) and Perl (Perl Navigator), from npm.
+    # Use Homebrew's npm explicitly: another Node (e.g. the nodejs.org
+    # installer) may come first on PATH with a root-owned global folder.
+    brew install node
+    "$(brew --prefix)/bin/npm" install -g pyright perlnavigator-server
+
     echo "Done. Restart Ghostty (or press cmd+shift+,) to load the new config."
 }
 
@@ -126,8 +132,15 @@ function install_on_ubuntu() {
 
     nvim_plugins
     
-    # install clangd language server
-    sudo apt-get install clangd-12
+    # install clangd language server (the clangd package provides the `clangd`
+    # command Neovim runs; clangd-NN packages only provide `clangd-NN`)
+    sudo apt-get install clangd
+
+    # language servers for Python (pyright) and Perl (Perl Navigator), from npm.
+    # They need Node 16+ (apt has 18 on Ubuntu 24.04). Installed into ~/.local,
+    # whose bin/ Ubuntu puts on PATH, so npm doesn't need sudo.
+    sudo apt install nodejs npm
+    npm install -g --prefix "$HOME/.local" pyright perlnavigator-server
 }
 
 function usage() {

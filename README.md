@@ -38,6 +38,8 @@ refuses to run as root.
 4. Installs `tree-sitter-cli`, which nvim-treesitter needs to build parsers.
 5. Installs the Neovim plugins (`:PlugInstall`).
 6. Installs `llvm` (for the `clangd` language server).
+7. Installs Node and, with npm, the `pyright` (Python) and Perl Navigator
+   (Perl) language servers.
 
 Restart Ghostty afterwards (or press `cmd+shift+,`) to load its config.
 
@@ -46,7 +48,9 @@ Restart Ghostty afterwards (or press `cmd+shift+,`) to load its config.
    then downloads vim-plug.
 2. Installs git and stow, then stows the `nvim` package.
 3. Installs the Neovim plugins (`:PlugInstall`).
-4. Installs `clangd-12`.
+4. Installs `clangd`, then Node/npm and the `pyright` and Perl Navigator
+   language servers (into `~/.local`, so no sudo). These need Node 16+, which
+   apt provides from Ubuntu 24.04.
 
 On both, files that already exist where stow wants to link (such as a
 `~/.zshrc`) are moved aside as `<name>.pre-dotfiles` first,
