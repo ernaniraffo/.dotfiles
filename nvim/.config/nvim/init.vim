@@ -85,8 +85,6 @@ Plug 'onsails/lspkind-nvim'
 " Smooth scrolling animation for <C-d>/<C-u>/<C-f>/<C-b>/<C-e>/<C-y>/zt/zz/zb
 Plug 'karb94/neoscroll.nvim'
 
-" :GhosttyTheme picks a theme available in both Neovim and Ghostty, applies it to both
-Plug 'landerson02/ghostty-theme-sync.nvim'
 Plug 'rebelot/kanagawa.nvim'
 
 " Treesitter

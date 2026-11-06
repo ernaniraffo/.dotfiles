@@ -76,3 +76,37 @@ C++ deliberately has no Treesitter parser. Compiling its queries added about
 uses regex syntax, plus `after/syntax/cpp.vim` to color function names. On a
 machine that already has the parser, run `:TSUninstall cpp`. To go back, add
 `'cpp'` to the list in `lua/eraffo/treesitter.lua`.
+
+## Themes
+
+Ghostty and Neovim both follow the system light/dark appearance: Ghostty
+switches its own theme, then Neovim picks up the new background color from
+Ghostty and reloads its colorscheme. They're configured separately, so changing
+theme means editing both.
+
+**Ghostty:** set both sides of the `theme` line in
+`nvim/.config/ghostty/config.ghostty`, then press `cmd+shift+,`:
+
+```
+theme = light:Kanagawa Lotus,dark:Kanagawa Dragon
+```
+
+Copy the names from `ghostty +list-themes`, because config validation can miss
+a typo on the side that isn't currently active.
+
+**Neovim:** add the colorscheme's `Plug` line to `nvim/.config/nvim/init.vim`
+and run `:PlugInstall`. Then set it up in `lua/eraffo/colors.lua` and restart
+Neovim. Run `:PlugClean` if you removed the old one.
+
+- Use a colorscheme that picks its light or dark version from `background`. How
+  to set that up varies, so check its README. Kanagawa does it with
+  `background = { dark = 'dragon', light = 'lotus' }` and plain
+  `colorscheme kanagawa`. Naming one version, like `kanagawa-dragon`, ends up on
+  the wrong theme after a switch.
+- Don't set `background` anywhere in the config, or Neovim stops following the
+  terminal.
+- The no-italics settings in `colors.lua` are specific to Kanagawa, so redo them
+  for the new colorscheme.
+
+To check it works, switch the system appearance with Neovim open and run
+`:set background?`.

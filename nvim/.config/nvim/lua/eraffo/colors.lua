@@ -1,23 +1,16 @@
--- Colorscheme, kept in sync with Ghostty by ghostty-theme-sync.nvim.
---
--- :GhosttyTheme lists the themes that exist in both Neovim (installed
--- colorschemes) and Ghostty, sets the picked one in Neovim, writes it to the
--- Ghostty config, and rewrites the colorscheme line below so it persists.
--- Reload Ghostty's config afterwards (cmd+shift+,) to apply it there.
-require('ghostty-theme-sync').setup({
-    ghostty_config_path = '~/.config/ghostty/config.ghostty', -- tracked in dotfiles
-    persist_nvim_theme = true,
-    nvim_config_path = vim.fn.stdpath('config') .. '/lua/eraffo/colors.lua',
-})
-
--- Kanagawa without italics (its defaults italicize comments, keywords and
--- builtin variables like `self`).
+-- Kanagawa follows 'background', which Neovim updates from the terminal's
+-- background colour when Ghostty switches theme with the system appearance.
+-- Don't set 'background' in the config: that stops Neovim following it.
+-- The Ghostty side is the theme line in ~/.config/ghostty/config.ghostty.
 require('kanagawa').setup({
+    -- No italics (its defaults italicize comments, keywords and builtin
+    -- variables like `self`).
     commentStyle = { italic = false },
     keywordStyle = { italic = false },
     overrides = function()
         return { ['@variable.builtin'] = { italic = false } }
     end,
+    background = { dark = 'dragon', light = 'lotus' },
 })
 
-vim.cmd.colorscheme('kanagawa-dragon')
+vim.cmd.colorscheme('kanagawa')
