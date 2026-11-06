@@ -8,6 +8,10 @@ vim.lsp.config('*', {
 
 vim.lsp.enable({ 'clangd', 'pyright', 'perlnavigator' })
 
+-- Keep colors stable: semantic tokens arrive once the server is ready and
+-- recolor the file up to a second after it opens.
+vim.lsp.semantic_tokens.enable(false)
+
 -- Buffer-local keymaps whenever a server attaches.
 -- (on_attach is ignored by vim.lsp.enable, so these use LspAttach instead.)
 vim.api.nvim_create_autocmd('LspAttach', {
