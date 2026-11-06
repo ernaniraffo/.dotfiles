@@ -9,7 +9,8 @@ vim.lsp.config('*', {
 vim.lsp.enable({ 'clangd', 'pyright', 'perlnavigator' })
 
 -- Keep colors stable: semantic tokens arrive once the server is ready and
--- recolor the file up to a second after it opens.
+-- recolor the file up to a second after it opens. The cost is that clangd no
+-- longer dims code in inactive #ifdef branches.
 vim.lsp.semantic_tokens.enable(false)
 
 -- Buffer-local keymaps whenever a server attaches.

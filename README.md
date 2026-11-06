@@ -64,19 +64,30 @@ and then run `:TSUpdate` in Neovim.
 
 ## Neovim
 
-The configs require **Neovim 0.12+**: nvim-treesitter's `main` branch needs
-0.12, and the LSP setup uses `vim.lsp.config`/`vim.lsp.enable` (0.11+).
+The configs require **Neovim 0.12+**: nvim-treesitter's `main` branch and
+`vim.lsp.semantic_tokens.enable` both need it.
 
 Treesitter parsers (`c`, `python`, `bash`) are installed automatically on first
 launch into `~/.local/share/nvim/site`. Building them needs `tree-sitter-cli`,
 `curl`, `tar` and a C compiler.
 
-C++ deliberately has no Treesitter parser. Compiling its queries added about
+C++ deliberately doesn't use Treesitter. Compiling its queries added about
 170 ms to opening a C++ file (or a `.h` file, which Neovim treats as C++), so it
 uses regex syntax from
-[vim-cpp-modern](https://github.com/bfrg/vim-cpp-modern). On a machine that
-already has the parser, run `:TSUninstall cpp`. To go back, add `'cpp'` to the
-list in `lua/eraffo/treesitter.lua`.
+[vim-cpp-modern](https://github.com/bfrg/vim-cpp-modern). To go back, add
+`'cpp'` to the list in `lua/eraffo/treesitter.lua` and remove the cpp check
+there. `:TSUninstall cpp` removes a parser left over from an older setup.
+
+That has a few limits:
+
+- `cpp` code blocks in Markdown and in LSP hover popups aren't colored.
+- Headers in a C project are colored a little differently from `.c` files.
+- Jumping into the middle of a raw string or `#if 0` block longer than 50 lines
+  can show the wrong colors. `g:c_minlines` widens that window, but makes far
+  jumps slower.
+
+LSP semantic tokens are off, because they recolor a file up to a second after it
+opens. That also means `clangd` doesn't dim code in inactive `#ifdef` branches.
 
 ## Themes
 
@@ -106,8 +117,8 @@ Neovim. Run `:PlugClean` if you removed the old one.
   the wrong theme after a switch.
 - Don't set `background` anywhere in the config, or Neovim stops following the
   terminal.
-- The no-italics settings in `colors.lua` are specific to Kanagawa, so redo them
-  for the new colorscheme.
+- The no-italics and no-bold settings in `colors.lua` are specific to Kanagawa,
+  so redo them for the new colorscheme.
 
 To check it works, switch the system appearance with Neovim open and run
 `:set background?`.

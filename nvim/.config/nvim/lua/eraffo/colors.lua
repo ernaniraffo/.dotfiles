@@ -4,9 +4,11 @@
 -- The Ghostty side is the theme line in ~/.config/ghostty/config.ghostty.
 require('kanagawa').setup({
     -- No italics (its defaults italicize comments, keywords and builtin
-    -- variables like `self`).
+    -- variables like `self`), and no bold keywords in regex syntax like C++'s,
+    -- which matches how Treesitter languages look.
     commentStyle = { italic = false },
     keywordStyle = { italic = false },
+    statementStyle = { bold = false },
     overrides = function()
         return { ['@variable.builtin'] = { italic = false } }
     end,
