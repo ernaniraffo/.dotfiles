@@ -73,9 +73,9 @@ launch into `~/.local/share/nvim/site`. Building them needs `tree-sitter-cli`,
 
 C++ deliberately has no Treesitter parser. Compiling its queries added about
 170 ms to opening a C++ file (or a `.h` file, which Neovim treats as C++), so it
-uses regex syntax, plus `after/syntax/cpp.vim` to color function names. On a
-machine that already has the parser, run `:TSUninstall cpp`. To go back, add
-`'cpp'` to the list in `lua/eraffo/treesitter.lua`.
+uses regex syntax. On a machine that already has the parser, run
+`:TSUninstall cpp`. To go back, add `'cpp'` to the list in
+`lua/eraffo/treesitter.lua`.
 
 ## Themes
 

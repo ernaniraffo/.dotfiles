@@ -3,7 +3,7 @@
 
 -- No cpp, on purpose: its grammar is huge, so compiling its queries takes
 -- ~180 ms every session, by far the biggest cost of opening a file. C++ uses
--- regex syntax instead (see after/syntax/cpp.vim). To go back, add 'cpp' here.
+-- regex syntax instead. To go back, add 'cpp' here.
 local parsers = { 'c', 'python', 'bash' }
 
 -- No-op for parsers that are already installed; runs asynchronously.
