@@ -93,7 +93,6 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
 
 " Regex highlighting for C++, which deliberately skips Treesitter (see lua/eraffo/treesitter.lua)
 let g:cpp_member_highlight = 1
-let g:cpp_attributes_highlight = 1
 Plug 'bfrg/vim-cpp-modern'
 
 call plug#end()

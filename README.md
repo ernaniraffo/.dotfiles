@@ -76,7 +76,8 @@ C++ deliberately doesn't use Treesitter. Compiling its queries added about
 uses regex syntax from
 [vim-cpp-modern](https://github.com/bfrg/vim-cpp-modern). To go back, add
 `'cpp'` to the list in `lua/eraffo/treesitter.lua` and remove the cpp check
-there. `:TSUninstall cpp` removes a parser left over from an older setup.
+there. `:TSUninstall cpp` removes a parser left over from an older setup. Until
+you run it, Telescope previews and hover popups still use that parser.
 
 That has a few limits:
 
@@ -113,8 +114,8 @@ Neovim. Run `:PlugClean` if you removed the old one.
 - Use a colorscheme that picks its light or dark version from `background`. How
   to set that up varies, so check its README. Kanagawa does it with
   `background = { dark = 'dragon', light = 'lotus' }` and plain
-  `colorscheme kanagawa`. Naming one version, like `kanagawa-dragon`, ends up on
-  the wrong theme after a switch.
+  `colorscheme kanagawa`. Naming one version, like `kanagawa-dragon`, starts on
+  that version whatever the system appearance is.
 - Don't set `background` anywhere in the config, or Neovim stops following the
   terminal.
 - The no-italics and no-bold settings in `colors.lua` are specific to Kanagawa,

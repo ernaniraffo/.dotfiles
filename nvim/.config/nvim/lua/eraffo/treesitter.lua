@@ -2,17 +2,17 @@
 -- queries; highlighting is Neovim's own vim.treesitter, started per buffer.
 
 -- No cpp, on purpose: its grammar is huge, so compiling its queries takes
--- ~170 ms every session, by far the biggest cost of opening a file. C++ uses
--- regex syntax from vim-cpp-modern instead, even if a parser is on disk. To go
--- back, add 'cpp' here and remove the cpp check below.
+-- ~170 ms every session, by far the biggest cost of opening a file. C++ files
+-- use regex syntax from vim-cpp-modern instead, even if a parser is on disk. To
+-- go back, add 'cpp' here and remove the cpp check below.
 local parsers = { 'c', 'python', 'bash' }
 
 -- No-op for parsers that are already installed; runs asynchronously.
 require('nvim-treesitter').install(parsers)
 
 -- Bigger files keep Neovim's background parsing, since parsing them up front
--- can freeze the editor.
-local max_bytes_parsed_up_front = 1024 * 1024
+-- can freeze the editor. At this size the wait is at most ~200 ms.
+local max_bytes_parsed_up_front = 256 * 1024
 
 local function highlight(buf, lang)
     -- Start before the first redraw so the file is never painted with regex
@@ -30,9 +30,11 @@ local function highlight(buf, lang)
     end
 
     -- Parse now too, including code blocks in Markdown. Neovim otherwise parses
-    -- in the background, so the first paint is missing colors.
+    -- in the background, so the first paint is missing colors. Skip it for
+    -- buffers loaded without being shown, like by an LSP rename across files,
+    -- since those don't paint at all.
     local size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
-    if size <= max_bytes_parsed_up_front then
+    if size <= max_bytes_parsed_up_front and vim.fn.win_gettype() ~= 'autocmd' then
         vim.treesitter.get_parser(buf, lang):parse(true)
     end
 end
@@ -41,7 +43,7 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('eraffo_treesitter', { clear = true }),
     callback = function(args)
         local lang = vim.treesitter.language.get_lang(args.match)
-        local ok, err = pcall(function()
+        local ok = pcall(function()
             if lang and lang ~= 'cpp' and vim.treesitter.language.add(lang) then
                 highlight(args.buf, lang)
             else
@@ -54,9 +56,11 @@ vim.api.nvim_create_autocmd('FileType', {
         -- regex syntax. Report it, but don't let it reach whatever opened the
         -- file, because `gd` would then stop before moving the cursor. That
         -- rules out the ERROR level too, which raises through callers as well.
+        -- Keep it short and once per language, so it can't cause a Press ENTER
+        -- prompt either.
         if not ok then
             vim.treesitter.stop(args.buf)
-            vim.notify(('Treesitter failed for %s: %s'):format(lang, tostring(err):match('[^\n]+')), vim.log.levels.WARN)
+            vim.notify_once(('Treesitter failed for %s, using regex. Try :TSUpdate.'):format(lang), vim.log.levels.WARN)
         end
     end,
 })
