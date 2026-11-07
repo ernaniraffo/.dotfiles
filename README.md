@@ -77,7 +77,8 @@ uses regex syntax from
 [vim-cpp-modern](https://github.com/bfrg/vim-cpp-modern). To go back, add
 `'cpp'` to the list in `lua/eraffo/treesitter.lua` and remove the cpp check
 there. `:TSUninstall cpp` removes a parser left over from an older setup. Until
-you run it, Telescope previews and hover popups still use that parser.
+you run it, Telescope previews, hover popups and Markdown code blocks still use
+that parser.
 
 That has a few limits:
 
@@ -111,15 +112,16 @@ a typo on the side that isn't currently active.
 and run `:PlugInstall`. Then set it up in `lua/eraffo/colors.lua` and restart
 Neovim. Run `:PlugClean` if you removed the old one.
 
-- Use a colorscheme that picks its light or dark version from `background`. How
-  to set that up varies, so check its README. Gruvbox only needs
-  `colorscheme gruvbox`, and `g:gruvbox_contrast_dark` and
-  `g:gruvbox_contrast_light` pick how dark each mode is. Some colorschemes have
-  a separate name for each version, like `kanagawa-dragon`. Naming one starts on
-  that version whatever the system appearance is.
+- Use a colorscheme that picks its light or dark version from `background` and
+  doesn't set `background` itself. One that does, like `morhetz/gruvbox`, stops
+  Neovim following the terminal. How to set it up varies, so check its README.
+  Some colorschemes have a separate name for each version, like
+  `kanagawa-dragon`. Naming one starts on that version whatever the system
+  appearance is.
 - Don't set `background` anywhere in the config, or Neovim stops following the
   terminal.
-- The settings in `colors.lua` are specific to Gruvbox, so redo them for the new
+- The settings in `colors.lua` are specific to Gruvbox, including the ones that
+  match its backgrounds to the Ghostty themes, so redo them for the new
   colorscheme.
 
 To check it works, switch the system appearance with Neovim open and run

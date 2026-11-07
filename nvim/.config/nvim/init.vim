@@ -85,7 +85,7 @@ Plug 'onsails/lspkind-nvim'
 " Smooth scrolling animation for <C-d>/<C-u>/<C-f>/<C-b>/<C-e>/<C-y>/zt/zz/zb
 Plug 'karb94/neoscroll.nvim'
 
-Plug 'morhetz/gruvbox'
+Plug 'ellisonleao/gruvbox.nvim'
 
 " Treesitter
 " main branch: the maintained rewrite (master is frozen). Needs tree-sitter-cli.
