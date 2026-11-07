@@ -122,8 +122,5 @@ Neovim. Run `:PlugClean` if you removed the old one.
 - The settings in `colors.lua` are specific to Gruvbox, so redo them for the new
   colorscheme.
 
-Ghostty has no soft version of Gruvbox's light theme, so in light mode Neovim's
-background (`#f2e5bc`) is slightly darker than the terminal's (`#fbf1c7`).
-
 To check it works, switch the system appearance with Neovim open and run
 `:set background?`.
