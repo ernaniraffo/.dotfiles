@@ -11,7 +11,8 @@ local parsers = { 'c', 'python', 'bash' }
 require('nvim-treesitter').install(parsers)
 
 -- Bigger files keep Neovim's background parsing, since parsing them up front
--- can freeze the editor. At this size the wait is at most ~200 ms.
+-- can freeze the editor. At this size the wait is ~60 ms for code, and ~200 ms
+-- for Markdown with many code blocks.
 local max_bytes_parsed_up_front = 256 * 1024
 
 local function highlight(buf, lang)
@@ -57,9 +58,10 @@ vim.api.nvim_create_autocmd('FileType', {
         -- file, because `gd` would then stop before moving the cursor. That
         -- rules out the ERROR level too, which raises through callers as well.
         -- Keep it short and once per language, so it can't cause a Press ENTER
-        -- prompt either.
+        -- prompt either. This can't cover Lua and Markdown, whose filetype
+        -- plugins in Neovim start Treesitter before this autocmd runs.
         if not ok then
-            vim.treesitter.stop(args.buf)
+            pcall(vim.treesitter.stop, args.buf)
             vim.notify_once(('Treesitter failed for %s, using regex. Try :TSUpdate.'):format(lang), vim.log.levels.WARN)
         end
     end,
