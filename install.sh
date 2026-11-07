@@ -5,9 +5,6 @@
 cd "$(dirname "$0")" || exit 1
 TARGET=$(dirname "$PWD")
 
-# --personal (macOS) also stows my own zsh config (aliases).
-PERSONAL=false
-
 function ubuntu_nvim() {
     sudo apt-get update
     sudo apt install curl python3-neovim
@@ -63,7 +60,7 @@ function ubuntu_tree_sitter() {
 }
 
 # Stow one package. Files that already exist where stow wants to link (e.g. a
-# ~/.zshrc made before the dotfiles) would make stow skip the whole package,
+# ~/.config/nvim made before the dotfiles) would make stow skip the whole package,
 # so move them aside first as <name>.pre-dotfiles.
 function stow_package() {
     local pkg=$1 target
@@ -124,9 +121,6 @@ function install_on_macOS() {
     brew install git
     brew install stow
     stow_packages
-    if $PERSONAL; then
-        stow_package zsh
-    fi
 
     # Ghostty terminal (its config comes from the nvim package above)
     ghostty_macOS
@@ -184,13 +178,10 @@ function install_on_ubuntu() {
 }
 
 function usage() {
-    echo "Usage: $0 [mac, ubuntu] [--personal]"
-    echo "  --personal  (mac) also stow my zsh config (personal aliases)"
+    echo "Usage: $0 [mac, ubuntu]"
 }
 
-if [[ $# -eq 2 && $2 == "--personal" ]]; then
-    PERSONAL=true
-elif [[ $# -ne 1 ]]; then
+if [[ $# -ne 1 ]]; then
     usage
     exit 1
 fi

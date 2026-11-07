@@ -11,15 +11,27 @@ $ ./install.sh mac
 $ ./install.sh ubuntu
 ```
 
-By default this sets up Neovim and Ghostty only. The `zsh` package holds my
-personal shell aliases, so on macOS it's opt-in:
+This sets up Neovim and Ghostty only. Your shell config and git settings
+(name, email) aren't part of these dotfiles, so keep your own.
 
-```
-$ ./install.sh mac --personal   # also stows zsh
-```
+> [!IMPORTANT]
+> **Your shell needs two things on `PATH`** for the editor and its language
+> servers to be found:
+>
+> - **macOS:** Homebrew's binaries. Homebrew's installer tells you to add
+>   `eval "$(/opt/homebrew/bin/brew shellenv)"` to `~/.zprofile`; keep it there.
+> - **Ubuntu with zsh:** `~/.local/bin`, where the script installs `pyright`
+>   and Perl Navigator. Bash adds it by default, but zsh doesn't, so add
+>   `export PATH="$HOME/.local/bin:$PATH"` to your `~/.zshrc`.
+>
+> Optionally, `alias vi=nvim` and `alias vim=nvim` open Neovim from the usual
+> commands.
 
-Git settings (name, email) aren't part of these dotfiles; set your own with
-`git config --global`.
+> [!WARNING]
+> Older versions of these dotfiles linked `~/.zshrc` into the repo. If yours is
+> still a link (`ls -l ~/.zshrc` shows `->`), replace it with a copy **before**
+> pulling, or your shell config disappears:
+> `cp ~/.zshrc ~/.zshrc.copy && mv ~/.zshrc.copy ~/.zshrc`.
 
 Run it as your normal user, **not** as root or with `sudo`. The script calls
 `sudo` itself only for package installs, so stow, vim-plug and plugin builds
@@ -30,8 +42,7 @@ refuses to run as root.
 
 **macOS** (uses Homebrew):
 1. Installs Neovim and curl, then downloads [vim-plug](https://github.com/junegunn/vim-plug).
-2. Installs git and stow, then stows the `nvim` package (plus `zsh` with
-   `--personal`).
+2. Installs git and stow, then stows the `nvim` package.
 3. Installs [Ghostty](https://ghostty.org) if it isn't in `/Applications`, and
    moves aside any config in `~/Library/Application Support/com.mitchellh.ghostty`
    (it would override the dotfiles' `~/.config/ghostty/config.ghostty`).
@@ -59,7 +70,7 @@ Restart Ghostty afterwards (or press `cmd+shift+,`) to load its config.
    apt provides from Ubuntu 24.04.
 
 On both, files that already exist where stow wants to link (such as a
-`~/.zshrc`) are moved aside as `<name>.pre-dotfiles` first,
+`~/.config/nvim`) are moved aside as `<name>.pre-dotfiles` first,
 since stow would otherwise skip the whole package.
 
 If the script skipped `tree-sitter-cli` on an older Ubuntu, install a recent
