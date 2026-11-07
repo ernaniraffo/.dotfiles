@@ -9,20 +9,30 @@ TARGET=$(dirname "$PWD")
 PERSONAL=false
 
 function ubuntu_nvim() {
-    # install neovim
-    sudo apt install neovim
-    sudo apt install python3-neovim
-    sudo apt-get install software-properties-common
-    sudo add-apt-repository ppa:neovim-ppa/stable
     sudo apt-get update
-    
-    # install newest version
-    sudo apt-get install neovim
-    
-    # vim-plug install needs curl
-    sudo apt install curl
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    sudo apt install curl python3-neovim
+
+    # Neovim from its official release, as Neovim's install guide describes.
+    # The config needs 0.12+, and apt and the neovim-ppa only have older
+    # versions (the PPA's stable is 0.7.2). /usr/local/bin is on PATH by
+    # default and comes before /usr/bin, so it also wins over an apt install.
+    local arch tmp
+    case $(uname -m) in
+        x86_64) arch=x86_64 ;;
+        aarch64) arch=arm64 ;;
+        *) echo "No Neovim release for $(uname -m)"; exit 1 ;;
+    esac
+    tmp=$(mktemp -d)
+    curl -fLo "$tmp/nvim.tar.gz" \
+        "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-$arch.tar.gz" || exit 1
+    sudo rm -rf "/opt/nvim-linux-$arch"
+    sudo tar -C /opt -xzf "$tmp/nvim.tar.gz"
+    sudo ln -sf "/opt/nvim-linux-$arch/bin/nvim" /usr/local/bin/nvim
+    rm -rf "$tmp"
+    hash -r  # forget any nvim bash already found on PATH
+
+    curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 }
 
 # Stow one package. Files that already exist where stow wants to link (e.g. a
