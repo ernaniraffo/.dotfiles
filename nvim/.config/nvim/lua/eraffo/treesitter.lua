@@ -11,30 +11,52 @@ local parsers = { 'c', 'python', 'bash' }
 require('nvim-treesitter').install(parsers)
 
 -- Bigger files keep Neovim's background parsing, since parsing them up front
--- would freeze the editor (~780 ms at 200,000 lines).
-local max_lines_parsed_up_front = 50000
+-- can freeze the editor.
+local max_bytes_parsed_up_front = 1024 * 1024
+
+local function highlight(buf, lang)
+    -- Start before the first redraw so the file is never painted with regex
+    -- colors first. The highlight query compiles once per language per session
+    -- (~40 ms); deferring it wouldn't save that time, it would just freeze the
+    -- editor right after a flash of wrong colors.
+    --
+    -- Filetype plugins for some languages (Lua, Markdown) have already started
+    -- it. A second highlighter would save the first one's 'spelloptions' as the
+    -- original, which breaks spell checking if the filetype changes later.
+    local active = vim.treesitter.highlighter.active[buf]
+    if not (active and active.tree:lang() == lang) then
+        vim.treesitter.stop(buf)
+        vim.treesitter.start(buf, lang)
+    end
+
+    -- Parse now too, including code blocks in Markdown. Neovim otherwise parses
+    -- in the background, so the first paint is missing colors.
+    local size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
+    if size <= max_bytes_parsed_up_front then
+        vim.treesitter.get_parser(buf, lang):parse(true)
+    end
+end
 
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('eraffo_treesitter', { clear = true }),
     callback = function(args)
         local lang = vim.treesitter.language.get_lang(args.match)
-        if args.match == 'cpp' or not lang or not vim.treesitter.language.add(lang) then
-            -- Regex syntax. Stopping also drops the highlighter of a previous
-            -- filetype, like after `:set ft=cpp` in a .c file.
+        local ok, err = pcall(function()
+            if lang and lang ~= 'cpp' and vim.treesitter.language.add(lang) then
+                highlight(args.buf, lang)
+            else
+                -- Regex syntax. Stopping also drops the highlighter of a
+                -- previous filetype, like after `:set ft=cpp` in a .c file.
+                vim.treesitter.stop(args.buf)
+            end
+        end)
+        -- A parser that won't load or a query broken by an update falls back to
+        -- regex syntax. Report it, but don't let it reach whatever opened the
+        -- file, because `gd` would then stop before moving the cursor. That
+        -- rules out the ERROR level too, which raises through callers as well.
+        if not ok then
             vim.treesitter.stop(args.buf)
-            return
-        end
-
-        -- Start before the first redraw so the file is never painted with
-        -- regex colors first. The highlight query compiles once per language
-        -- per session (~40 ms); deferring it wouldn't save that time, it would
-        -- just freeze the editor right after a flash of wrong colors.
-        vim.treesitter.start(args.buf, lang)
-
-        -- Parse now too. Neovim otherwise parses in the background, so the
-        -- first paint of a long file has no colors at all.
-        if vim.api.nvim_buf_line_count(args.buf) <= max_lines_parsed_up_front then
-            vim.treesitter.get_parser(args.buf, lang):parse()
+            vim.notify(('Treesitter failed for %s: %s'):format(lang, tostring(err):match('[^\n]+')), vim.log.levels.WARN)
         end
     end,
 })

@@ -91,7 +91,7 @@ Plug 'rebelot/kanagawa.nvim'
 " main branch: the maintained rewrite (master is frozen). Needs tree-sitter-cli.
 Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
 
-" Regex highlighting for C++, which has no Treesitter parser (see lua/eraffo/treesitter.lua)
+" Regex highlighting for C++, which deliberately skips Treesitter (see lua/eraffo/treesitter.lua)
 let g:cpp_member_highlight = 1
 let g:cpp_attributes_highlight = 1
 Plug 'bfrg/vim-cpp-modern'
