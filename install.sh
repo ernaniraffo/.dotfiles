@@ -35,6 +35,33 @@ function ubuntu_nvim() {
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 }
 
+function ubuntu_tree_sitter() {
+    # nvim-treesitter (main branch) builds parsers with tree-sitter-cli and a C
+    # compiler. apt's tree-sitter-cli is older than the version it needs, so use
+    # the official release, the same way as Neovim.
+    sudo apt install build-essential
+
+    local arch tmp
+    case $(uname -m) in
+        x86_64) arch=x64 ;;
+        aarch64) arch=arm64 ;;
+        *) echo "No tree-sitter release for $(uname -m)"; return ;;
+    esac
+    tmp=$(mktemp -d)
+    curl -fLo "$tmp/tree-sitter.gz" \
+        "https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-$arch.gz" || exit 1
+    gunzip "$tmp/tree-sitter.gz"
+    chmod +x "$tmp/tree-sitter"
+    # The release needs a recent glibc (Ubuntu 24.04+), so make sure it runs.
+    if "$tmp/tree-sitter" --version; then
+        sudo install -m 755 "$tmp/tree-sitter" /usr/local/bin/tree-sitter
+    else
+        echo "The tree-sitter release doesn't run on this system, likely because it needs a newer glibc (Ubuntu 24.04+)."
+        echo "Treesitter highlighting falls back to regex syntax until tree-sitter-cli is installed."
+    fi
+    rm -rf "$tmp"
+}
+
 # Stow one package. Files that already exist where stow wants to link (e.g. a
 # ~/.zshrc made before the dotfiles) would make stow skip the whole package,
 # so move them aside first as <name>.pre-dotfiles.
@@ -139,6 +166,9 @@ function install_on_ubuntu() {
     sudo apt install git
     sudo apt install stow
     stow_packages
+
+    # before the plugins, whose install builds the Treesitter parsers
+    ubuntu_tree_sitter
 
     nvim_plugins
     

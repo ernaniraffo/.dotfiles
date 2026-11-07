@@ -49,8 +49,12 @@ Restart Ghostty afterwards (or press `cmd+shift+,`) to load its config.
    only have versions older than the 0.12 this config needs. Then it downloads
    vim-plug.
 2. Installs git and stow, then stows the `nvim` package.
-3. Installs the Neovim plugins (`:PlugInstall`).
-4. Installs `clangd`, then Node/npm and the `pyright` and Perl Navigator
+3. Installs a C compiler (`build-essential`) and the latest `tree-sitter-cli`
+   release from GitHub as `/usr/local/bin/tree-sitter`, which nvim-treesitter
+   needs to build parsers. apt's version is too old. The release needs Ubuntu
+   24.04+, and on older systems the script says so and skips it.
+4. Installs the Neovim plugins (`:PlugInstall`).
+5. Installs `clangd`, then Node/npm and the `pyright` and Perl Navigator
    language servers (into `~/.local`, so no sudo). These need Node 16+, which
    apt provides from Ubuntu 24.04.
 
@@ -58,11 +62,9 @@ On both, files that already exist where stow wants to link (such as a
 `~/.zshrc`) are moved aside as `<name>.pre-dotfiles` first,
 since stow would otherwise skip the whole package.
 
-The Ubuntu path does **not** install `tree-sitter-cli`. apt's version is
-likely older than the 0.26.1+ that nvim-treesitter requires, so install a
-recent release yourself (for example from the
-[tree-sitter releases](https://github.com/tree-sitter/tree-sitter/releases))
-and then run `:TSUpdate` in Neovim.
+If the script skipped `tree-sitter-cli` on an older Ubuntu, install a recent
+release another way (for example `cargo install tree-sitter-cli`), then run
+`:TSUpdate` in Neovim.
 
 ## Neovim
 
