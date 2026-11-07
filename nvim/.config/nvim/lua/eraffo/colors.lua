@@ -1,18 +1,11 @@
--- Kanagawa follows 'background', which Neovim updates from the terminal's
+-- Gruvbox follows 'background', which Neovim updates from the terminal's
 -- background colour when Ghostty switches theme with the system appearance.
 -- Don't set 'background' in the config: that stops Neovim following it.
 -- The Ghostty side is the theme line in ~/.config/ghostty/config.ghostty.
-require('kanagawa').setup({
-    -- No italics (its defaults italicize comments, keywords and builtin
-    -- variables like `self`), and no bold keywords in regex syntax like C++'s,
-    -- which matches how Treesitter languages look.
-    commentStyle = { italic = false },
-    keywordStyle = { italic = false },
-    statementStyle = { bold = false },
-    overrides = function()
-        return { ['@variable.builtin'] = { italic = false } }
-    end,
-    background = { dark = 'dragon', light = 'lotus' },
-})
 
-vim.cmd.colorscheme('kanagawa')
+-- The darkest version of each mode.
+vim.g.gruvbox_contrast_dark = 'hard'
+vim.g.gruvbox_contrast_light = 'soft'
+vim.g.gruvbox_italic = 0
+
+vim.cmd.colorscheme('gruvbox')

@@ -101,7 +101,7 @@ theme means editing both.
 `nvim/.config/ghostty/config.ghostty`, then press `cmd+shift+,`:
 
 ```
-theme = light:Kanagawa Lotus,dark:Kanagawa Dragon
+theme = light:Gruvbox Light,dark:Gruvbox Dark Hard
 ```
 
 Copy the names from `ghostty +list-themes`, because config validation can miss
@@ -112,14 +112,18 @@ and run `:PlugInstall`. Then set it up in `lua/eraffo/colors.lua` and restart
 Neovim. Run `:PlugClean` if you removed the old one.
 
 - Use a colorscheme that picks its light or dark version from `background`. How
-  to set that up varies, so check its README. Kanagawa does it with
-  `background = { dark = 'dragon', light = 'lotus' }` and plain
-  `colorscheme kanagawa`. Naming one version, like `kanagawa-dragon`, starts on
+  to set that up varies, so check its README. Gruvbox only needs
+  `colorscheme gruvbox`, and `g:gruvbox_contrast_dark` and
+  `g:gruvbox_contrast_light` pick how dark each mode is. Some colorschemes have
+  a separate name for each version, like `kanagawa-dragon`. Naming one starts on
   that version whatever the system appearance is.
 - Don't set `background` anywhere in the config, or Neovim stops following the
   terminal.
-- The no-italics and no-bold settings in `colors.lua` are specific to Kanagawa,
-  so redo them for the new colorscheme.
+- The settings in `colors.lua` are specific to Gruvbox, so redo them for the new
+  colorscheme.
+
+Ghostty has no soft version of Gruvbox's light theme, so in light mode Neovim's
+background (`#f2e5bc`) is slightly darker than the terminal's (`#fbf1c7`).
 
 To check it works, switch the system appearance with Neovim open and run
 `:set background?`.
