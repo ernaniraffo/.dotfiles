@@ -1,6 +1,14 @@
 " cache compiled Lua modules (faster startup)
 lua vim.loader.enable()
 
+" No plugin here uses Python, Ruby, Node or Perl. Without these, Neovim's
+" Python and Ruby filetype plugins search for those languages each time such a
+" file opens, which can take seconds on a slow or managed machine.
+let g:loaded_python3_provider = 0
+let g:loaded_ruby_provider = 0
+let g:loaded_node_provider = 0
+let g:loaded_perl_provider = 0
+
 " turn off cursor styling
 set guicursor=
 
@@ -63,8 +71,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 " An optional plugin recommended by Telescope docs
 Plug 'nvim-telescope/telescope-fzf-native.nvim', {'do': 'make' }
-
-""Plug 'itchyny/lightline.vim'
 
 " vim-fugitive
 Plug 'tpope/vim-fugitive'

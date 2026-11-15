@@ -1,6 +1,5 @@
 require('eraffo/colors')
 require('eraffo/telescope')
---require('eraffo/lightline')
 require('eraffo/lsp')
 require('eraffo/treesitter')
 require('eraffo/scroll')

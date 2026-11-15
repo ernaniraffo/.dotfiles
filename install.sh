@@ -7,7 +7,7 @@ TARGET=$(dirname "$PWD")
 
 function ubuntu_nvim() {
     sudo apt-get update
-    sudo apt install curl python3-neovim
+    sudo apt install curl
 
     # Neovim from its official release, as Neovim's install guide describes.
     # The config needs 0.12+, and apt and the neovim-ppa only have older
