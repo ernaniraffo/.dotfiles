@@ -101,6 +101,14 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
 let g:cpp_member_highlight = 1
 Plug 'bfrg/vim-cpp-modern'
 
+" Multi-line edits like Tsoding? Potentially...
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+" Add cursors with \\j / \\k instead of <C-Down>/<C-Up>, which macOS
+" Mission Control takes. Plain keys work in every terminal on macOS and Linux.
+let g:VM_maps = {}
+let g:VM_maps['Add Cursor Down'] = '\\j'
+let g:VM_maps['Add Cursor Up']   = '\\k'
+
 call plug#end()
 
 lua require('eraffo')
