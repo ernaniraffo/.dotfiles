@@ -55,7 +55,7 @@ refuses to run as root.
 Restart Ghostty afterwards (or press `cmd+shift+,`) to load its config.
 
 **Ubuntu** (uses apt):
-1. Installs curl and `python3-neovim`, then the latest Neovim release from
+1. Installs curl, then the latest Neovim release from
    GitHub into `/opt`, linked as `/usr/local/bin/nvim`. apt and the Neovim PPA
    only have versions older than the 0.12 this config needs. Then it downloads
    vim-plug.
