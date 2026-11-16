@@ -62,6 +62,12 @@ inoremap [ []<left>
 " Insert open/closing braces, then enter insert mode in-between.
 inoremap {<cr> {<cr>}<esc>O
 
+" Don't continue comments on <Enter> or o/O.
+augroup eraffo_no_comment_continuation
+    autocmd!
+    autocmd FileType * setlocal formatoptions-=r formatoptions-=o
+augroup END
+
 " give signs (gitsigns, diagnostics) their own column left of the numbers
 set signcolumn=yes
 
@@ -106,10 +112,3 @@ Plug 'bfrg/vim-cpp-modern'
 call plug#end()
 
 lua require('eraffo')
-
-" Don't continue comments on <Enter> or o/O. Filetype plugins (c, cpp, ...) add
-" these flags back, so strip them after they run; plug#end() above registered them.
-augroup eraffo_no_comment_continuation
-    autocmd!
-    autocmd FileType * setlocal formatoptions-=r formatoptions-=o
-augroup END
