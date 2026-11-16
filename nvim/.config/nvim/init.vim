@@ -23,8 +23,9 @@ set smartindent
 " number of spaces used for autoindents
 set shiftwidth=4
 
-" adds line numbers
+" line numbers: absolute on the cursor line, relative elsewhere
 set number
+set relativenumber
 
 " columns used for the line number
 set numberwidth=4
@@ -61,7 +62,14 @@ inoremap [ []<left>
 " Insert open/closing braces, then enter insert mode in-between.
 inoremap {<cr> {<cr>}<esc>O
 
-set signcolumn=number
+" Don't continue comments on <Enter> or o/O.
+augroup eraffo_no_comment_continuation
+    autocmd!
+    autocmd FileType * setlocal formatoptions-=r formatoptions-=o
+augroup END
+
+" give signs (gitsigns, diagnostics) their own column left of the numbers
+set signcolumn=yes
 
 call plug#begin('~/.config/nvim/plugged')
 
