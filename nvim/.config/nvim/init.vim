@@ -106,3 +106,10 @@ Plug 'bfrg/vim-cpp-modern'
 call plug#end()
 
 lua require('eraffo')
+
+" Don't continue comments on <Enter> or o/O. Filetype plugins (c, cpp, ...) add
+" these flags back, so strip them after they run; plug#end() above registered them.
+augroup eraffo_no_comment_continuation
+    autocmd!
+    autocmd FileType * setlocal formatoptions-=r formatoptions-=o
+augroup END
