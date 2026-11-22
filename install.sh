@@ -3,11 +3,28 @@ set -e
 cd "$(dirname "$0")"
 TARGET=$(dirname "$PWD")
 
+PACKAGES=(nvim ghostty yapf)
+
+# Older installs symlinked all of ~/.config into nvim/.config, so other apps
+# wrote into this repo. Make ~/.config a real directory and move those out.
+unfold_config() {
+    local cfg="$TARGET/.config" src f
+    if [[ -L $cfg ]]; then
+        src=$(cd "$cfg" && pwd -P)
+        rm "$cfg" && mkdir "$cfg"
+        for f in "$src"/* "$src"/.[!.]*; do
+            [[ -e $f && ${f##*/} != nvim ]] && mv "$f" "$cfg/"
+        done
+    fi
+    mkdir -p "$cfg"
+}
+
 # Move aside files that would block stow, then link the configs.
-stow_nvim() {
-    stow -n nvim 2>&1 | sed -n 's/.*existing target \(is not owned by stow: \)\{0,1\}\([^ ]*\).*/\2/p' |
+link() {
+    unfold_config
+    stow -n "${PACKAGES[@]}" 2>&1 | sed -n 's/.*existing target \(is not owned by stow: \)\{0,1\}\([^ ]*\).*/\2/p' |
         while read -r f; do mv "$TARGET/$f" "$TARGET/$f.pre-dotfiles"; done
-    stow nvim
+    stow "${PACKAGES[@]}"
 }
 
 plug() {
@@ -22,7 +39,7 @@ mac() {
     for f in "$HOME/Library/Application Support/com.mitchellh.ghostty/config"{,.ghostty}; do
         [[ -f $f ]] && mv "$f" "$f.pre-dotfiles"
     done
-    plug && stow_nvim
+    plug && link
     nvim --headless "+PlugInstall --sync" +qall
     "$(brew --prefix)/bin/npm" install -g pyright perlnavigator-server
 }
@@ -41,7 +58,7 @@ ubuntu() {
     curl -fL "https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-$ts.gz" |
         gunzip | sudo tee /usr/local/bin/tree-sitter >/dev/null
     sudo chmod +x /usr/local/bin/tree-sitter
-    plug && stow_nvim
+    plug && link
     nvim --headless "+PlugInstall --sync" +qall
     npm install -g --prefix "$HOME/.local" pyright perlnavigator-server
 }

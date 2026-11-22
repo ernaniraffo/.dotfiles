@@ -8,6 +8,8 @@ Clone into `~/.dotfiles` and run as your normal user:
 ./install.sh mac      # or: ./install.sh ubuntu
 ```
 
+Each top-level folder (`nvim`, `ghostty`, `yapf`) is a
+[Stow](https://www.gnu.org/software/stow/) package linked into `~/.config`.
 Existing configs in the way are renamed to `<name>.pre-dotfiles`.
 
 ## What gets installed
