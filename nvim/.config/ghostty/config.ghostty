@@ -1,6 +1,6 @@
 # Docs: https://ghostty.org/docs/config
 # Keep the theme in sync with nvim/lua/eraffo/colors.lua.
-theme = light:Gruvbox Light,dark:Gruvbox Dark Hard
+theme = light:Modus Operandi,dark:Modus Vivendi
 
 # Skips the bash step Ghostty adds on macOS. Delete if you don't use zsh.
 command = direct:/bin/zsh -l
