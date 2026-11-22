@@ -1,11 +1,5 @@
--- Gruvbox follows 'background', which Neovim updates from the terminal's
--- background colour when Ghostty switches theme with the system appearance.
--- Don't set 'background' in the config: that stops Neovim following it. So does
--- morhetz/gruvbox, which sets it when loaded, so don't use that port.
--- The Ghostty side is the theme line in ~/.config/ghostty/config.ghostty.
-
--- Match the Ghostty themes, Gruvbox Dark Hard and Gruvbox Light. The contrast
--- setting covers both modes, so choose it each time the colorscheme loads.
+-- Gruvbox follows 'background', which Neovim reads from Ghostty. Don't set it.
+-- Hard contrast in dark mode matches Ghostty's Gruvbox Dark Hard.
 vim.api.nvim_create_autocmd('ColorSchemePre', {
     pattern = 'gruvbox',
     callback = function()
