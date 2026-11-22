@@ -1,41 +1,20 @@
--- nvim-treesitter (main branch): the plugin only installs parsers and
--- queries; highlighting is Neovim's own vim.treesitter, started per buffer.
+-- No cpp: compiling its queries costs ~170 ms per session, so C++ uses
+-- vim-cpp-modern's regex syntax instead.
+require('nvim-treesitter').install({ 'c', 'python', 'bash' })
 
--- No cpp, on purpose: its grammar is huge, so compiling its queries takes
--- ~170 ms every session, by far the biggest cost of opening a file. C++ files
--- use regex syntax from vim-cpp-modern instead, even if a parser is on disk. To
--- go back, add 'cpp' here and remove the cpp check below.
-local parsers = { 'c', 'python', 'bash' }
-
--- No-op for parsers that are already installed; runs asynchronously.
-require('nvim-treesitter').install(parsers)
-
--- Bigger files keep Neovim's background parsing, since parsing them up front
--- can freeze the editor. At this size the wait is ~60 ms for code, and ~200 ms
--- for Markdown with many code blocks.
-local max_bytes_parsed_up_front = 256 * 1024
+-- Larger files are left to Neovim's background parsing, to avoid freezing.
+local max_parse_bytes = 256 * 1024
 
 local function highlight(buf, lang)
-    -- Start before the first redraw so the file is never painted with regex
-    -- colors first. The highlight query compiles once per language per session
-    -- (~40 ms); deferring it wouldn't save that time, it would just freeze the
-    -- editor right after a flash of wrong colors.
-    --
-    -- Filetype plugins for some languages (Lua, Markdown) have already started
-    -- it. A second highlighter would save the first one's 'spelloptions' as the
-    -- original, which breaks spell checking if the filetype changes later.
+    -- Lua and Markdown ftplugins already start it; a second start breaks spell.
     local active = vim.treesitter.highlighter.active[buf]
     if not (active and active.tree:lang() == lang) then
         vim.treesitter.stop(buf)
         vim.treesitter.start(buf, lang)
     end
-
-    -- Parse now too, including code blocks in Markdown. Neovim otherwise parses
-    -- in the background, so the first paint is missing colors. Skip it for
-    -- buffers loaded without being shown, like by an LSP rename across files,
-    -- since those don't paint at all.
+    -- Parse up front so the first paint has colors; skip buffers never shown.
     local size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
-    if size <= max_bytes_parsed_up_front and vim.fn.win_gettype() ~= 'autocmd' then
+    if size <= max_parse_bytes and vim.fn.win_gettype() ~= 'autocmd' then
         vim.treesitter.get_parser(buf, lang):parse(true)
     end
 end
@@ -48,18 +27,10 @@ vim.api.nvim_create_autocmd('FileType', {
             if lang and lang ~= 'cpp' and vim.treesitter.language.add(lang) then
                 highlight(args.buf, lang)
             else
-                -- Regex syntax. Stopping also drops the highlighter of a
-                -- previous filetype, like after `:set ft=cpp` in a .c file.
                 vim.treesitter.stop(args.buf)
             end
         end)
-        -- A parser that won't load or a query broken by an update falls back to
-        -- regex syntax. Report it, but don't let it reach whatever opened the
-        -- file, because `gd` would then stop before moving the cursor. That
-        -- rules out the ERROR level too, which raises through callers as well.
-        -- Keep it short and once per language, so it can't cause a Press ENTER
-        -- prompt either. This can't cover Lua and Markdown, whose filetype
-        -- plugins in Neovim start Treesitter before this autocmd runs.
+        -- Warn rather than error, so callers like `gd` aren't interrupted.
         if not ok then
             pcall(vim.treesitter.stop, args.buf)
             vim.notify_once(('Treesitter failed for %s, using regex. Try :TSUpdate.'):format(lang), vim.log.levels.WARN)
