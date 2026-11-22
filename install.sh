@@ -8,13 +8,16 @@ PACKAGES=(nvim ghostty yapf)
 # Older installs symlinked all of ~/.config into nvim/.config, so other apps
 # wrote into this repo. Make ~/.config a real directory and move those out.
 unfold_config() {
-    local cfg="$TARGET/.config" src f
+    local cfg="$TARGET/.config" old="$(pwd -P)/nvim/.config" f
     if [[ -L $cfg ]]; then
-        src=$(cd "$cfg" && pwd -P)
-        rm "$cfg" && mkdir "$cfg"
-        for f in "$src"/* "$src"/.[!.]*; do
-            [[ -e $f && ${f##*/} != nvim ]] && mv "$f" "$cfg/"
+        [[ $(cd "$cfg" && pwd -P) == "$old" ]] ||
+            { echo "$cfg is a symlink this repo didn't make; remove it first"; exit 1; }
+        # Stage first and swap last, so a failed move can just be rerun.
+        mkdir -p "$cfg.new"
+        for f in "$old"/* "$old"/.[!.]*; do
+            [[ -e $f && ${f##*/} != nvim ]] && mv "$f" "$cfg.new/"
         done
+        rm "$cfg" && mv "$cfg.new" "$cfg"
     fi
     mkdir -p "$cfg"
 }

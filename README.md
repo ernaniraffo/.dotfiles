@@ -11,6 +11,8 @@ Clone into `~/.dotfiles` and run as your normal user:
 Each top-level folder (`nvim`, `ghostty`, `yapf`) is a
 [Stow](https://www.gnu.org/software/stow/) package linked into `~/.config`.
 Existing configs in the way are renamed to `<name>.pre-dotfiles`.
+On a machine where `~/.config` is a symlink into this repo (the old layout),
+rerun `./install.sh` after pulling to switch it over.
 
 ## What gets installed
 - [Neovim](https://neovim.io) 0.12+ with [vim-plug](https://github.com/junegunn/vim-plug)
