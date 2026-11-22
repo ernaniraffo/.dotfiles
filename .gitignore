@@ -1,14 +1,11 @@
 # Neovim Plugins
-nvim/.config/nvim/plugged/*
+nvim/.config/nvim/plugged/
 
 # macOS / editor junk
 .DS_Store
 *.un~
 
-# ~/.config is a symlink to nvim/.config, so every app that writes there
-# (gh, gcloud, copilot, ...) lands in this public repo. Ignore everything
-# by default and only allow the configs we actually track.
+# Older installs symlinked ~/.config to nvim/.config, so other apps (gh,
+# gcloud, ...) write there until install.sh is rerun. Never track them.
 nvim/.config/*
 !nvim/.config/nvim/
-!nvim/.config/yapf/
-!nvim/.config/ghostty/
