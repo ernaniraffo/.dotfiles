@@ -5,7 +5,7 @@ My Neovim and Ghostty configs.
 Clone into `~/.dotfiles` and run as your normal user:
 
 ```
-./install.sh mac      # or: ./install.sh ubuntu
+./install.sh mac      # or: ./install.sh linux
 ```
 
 Each top-level folder (`nvim`, `ghostty`, `yapf`) is a

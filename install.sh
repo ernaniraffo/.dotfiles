@@ -47,7 +47,7 @@ mac() {
     "$(brew --prefix)/bin/npm" install -g pyright perlnavigator-server
 }
 
-ubuntu() {
+linux() {
     [[ $(id -u) != 0 ]] || { echo "Run as your normal user, not root"; exit 1; }
     sudo apt-get update
     sudo apt-get install -y curl git stow build-essential clangd nodejs npm
@@ -67,6 +67,6 @@ ubuntu() {
 }
 
 case $1 in
-    mac|ubuntu) $1 ;;
-    *) echo "Usage: $0 mac|ubuntu"; exit 1 ;;
+    mac|linux) $1 ;;
+    *) echo "Usage: $0 mac|linux"; exit 1 ;;
 esac
