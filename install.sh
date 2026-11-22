@@ -3,7 +3,7 @@ set -e
 cd "$(dirname "$0")"
 TARGET=$(dirname "$PWD")
 
-PACKAGES=(nvim ghostty yapf)
+PACKAGES=(nvim ghostty yapf zsh)
 
 # Older installs symlinked all of ~/.config into nvim/.config, so other apps
 # wrote into this repo. Make ~/.config a real directory and move those out.
@@ -50,7 +50,7 @@ mac() {
 linux() {
     [[ $(id -u) != 0 ]] || { echo "Run as your normal user, not root"; exit 1; }
     sudo apt-get update
-    sudo apt-get install -y curl git stow build-essential clangd nodejs npm
+    sudo apt-get install -y curl git stow zsh build-essential clangd nodejs npm
     local arch=$(uname -m) ts=x64
     [[ $arch == aarch64 ]] && arch=arm64 ts=arm64
     # apt's Neovim and tree-sitter are too old.
@@ -62,6 +62,7 @@ linux() {
         gunzip | sudo tee /usr/local/bin/tree-sitter >/dev/null
     sudo chmod +x /usr/local/bin/tree-sitter
     plug && link
+    [[ $SHELL == */zsh ]] || chsh -s "$(command -v zsh)"
     nvim --headless "+PlugInstall --sync" +qall
     npm install -g --prefix "$HOME/.local" pyright perlnavigator-server
 }
