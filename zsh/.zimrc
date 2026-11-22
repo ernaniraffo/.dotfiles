@@ -1,0 +1,5 @@
+zmodule environment
+zmodule input
+zmodule utility
+zmodule sindresorhus/pure --source async.zsh --source pure.zsh
+zmodule completion
