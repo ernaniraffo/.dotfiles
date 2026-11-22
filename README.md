@@ -280,8 +280,9 @@ A few things work differently after the switch:
 - `>` won't overwrite an existing file (`NO_CLOBBER`). Use `>|` to overwrite.
 - `^`, `#` and `~` are glob operators (`EXTENDED_GLOB`), so quote things like
   `HEAD^`: `git show 'HEAD^'`.
-- The up arrow steps through all of history, not only the commands that start
-  with what you've typed.
+- The up arrow matches only the first word you've typed (zsh's
+  `up-line-or-search`, bound by macOS's `/etc/zshrc`). oh-my-zsh matched
+  everything you'd typed.
 - oh-my-zsh's git aliases are gone, so define the ones you use.
 - Reload with `exec zsh`, not `source ~/.zshrc`. Sourcing it again runs
   `compinit` again, and zimfw prints a warning.
