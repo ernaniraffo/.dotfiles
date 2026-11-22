@@ -13,13 +13,15 @@ $ ./install.sh ubuntu
 
 This sets up Neovim and Ghostty only. Your shell config and git settings
 (name, email) aren't part of these dotfiles, so keep your own.
+[Shell (optional)](#shell-optional) describes the zsh setup I use with them.
 
 > [!IMPORTANT]
 > **Your shell needs two things on `PATH`** for the editor and its language
 > servers to be found:
 >
 > - **macOS:** Homebrew's binaries. Homebrew's installer tells you to add
->   `eval "$(/opt/homebrew/bin/brew shellenv)"` to `~/.zprofile`; keep it there.
+>   `eval "$(/opt/homebrew/bin/brew shellenv)"` to `~/.zprofile`. That works;
+>   [Homebrew](#homebrew) below shows a faster way to do the same.
 > - **Ubuntu with zsh:** `~/.local/bin`, where the script installs `pyright`
 >   and Perl Navigator. Bash adds it by default, but zsh doesn't, so add
 >   `export PATH="$HOME/.local/bin:$PATH"` to your `~/.zshrc`.
@@ -106,6 +108,23 @@ That has a few limits:
 LSP semantic tokens are off, because they recolor a file up to a second after it
 opens. That also means `clangd` doesn't dim code in inactive `#ifdef` branches.
 
+## Ghostty
+
+Besides the theme (see [Themes](#themes)), `nvim/.config/ghostty/config.ghostty`
+sets two things:
+
+- **`command = direct:/bin/zsh -l`** starts zsh as a login shell without the
+  bash step Ghostty otherwise adds on macOS, about 2 ms sooner per new window.
+  macOS's `login(1)` still runs. This assumes zsh: delete the line if you use
+  another shell, or on Ubuntu with bash.
+- **A quick terminal on `` cmd+` ``** (macOS): a drop-down terminal you show
+  and hide from any app. It keeps its session between toggles, and its
+  animation is off so it appears at once. As a global shortcut it needs
+  Accessibility permission (System Settings > Privacy & Security >
+  Accessibility), which Ghostty asks for when it loads the config. It also
+  takes `` cmd+` `` system-wide, so that key no longer cycles through an app's
+  windows. If you use that, change or delete the `keybind` line.
+
 ## Themes
 
 Ghostty and Neovim both follow the system light/dark appearance: Ghostty
@@ -141,3 +160,140 @@ Neovim. Run `:PlugClean` if you removed the old one.
 
 To check it works, switch the system appearance with Neovim open and run
 `:set background?`.
+
+## Shell (optional)
+
+The repo doesn't manage your shell. This is the zsh setup I use on macOS; copy
+what you want into your own `~/.zshrc`, `~/.zimrc` and `~/.zprofile`.
+
+### zimfw
+
+[zimfw](https://zimfw.sh) (Zim Framework) isn't a plugin itself: it's a zsh
+framework and plugin manager, like oh-my-zsh, which it replaced here. It
+downloads *modules* (plugins): small zsh scripts that add features like tab
+completion, key bindings or a prompt theme. It then compiles them into one
+static init file that zsh loads at startup. That's why it starts faster than
+oh-my-zsh, which runs its loader logic on every shell start.
+
+To set it up:
+
+1. Back up your config with `cp ~/.zshrc ~/.zshrc.bak`. If you use oh-my-zsh,
+   remove its lines from `~/.zshrc`, such as `export ZSH=...`, `ZSH_THEME=...`,
+   `plugins=(...)` and `source $ZSH/oh-my-zsh.sh`.
+2. Create `~/.zimrc` with the modules. `environment` sets zsh options, `input`
+   sets key bindings, `utility` adds aliases and colors for `ls`, `grep` and
+   `less`, and `completion` sets up tab completion. Keep `completion` last,
+   after the modules that add completions.
+
+   ```
+   zmodule environment
+   zmodule input
+   zmodule utility
+   zmodule sindresorhus/pure --source async.zsh --source pure.zsh
+   zmodule completion
+   ```
+
+3. Add this to `~/.zshrc`. The last part is zimfw's install block: it downloads
+   zimfw if it's missing, rebuilds the init file when `~/.zimrc` changes, and
+   loads it. Put your own aliases after it, so they win over the `utility`
+   module's (`ll`, `lt`, ...).
+
+   ```
+   # Set editor default keymap to emacs (`-e`) or vi (`-v`)
+   bindkey -e
+
+   # pure: don't run `git fetch` in the background
+   PURE_GIT_PULL=0
+
+   ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+   # Download zimfw plugin manager if missing.
+   if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+     curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+         https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+   fi
+   # Install missing modules and update ${ZIM_HOME}/init.zsh if missing or outdated.
+   if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
+     source ${ZIM_HOME}/zimfw.zsh init
+   fi
+   # Initialize modules.
+   source ${ZIM_HOME}/init.zsh
+   ```
+
+4. Open a new terminal. The first start downloads zimfw and the modules.
+   `zimfw update` updates the modules, and `zimfw upgrade` updates zimfw itself.
+
+### Prompt: pure
+
+[pure](https://github.com/sindresorhus/pure) is a prompt (theme) plugin, which
+zimfw installs like any other module. It gets git status in a background
+worker, so the prompt never waits for git. zimfw's own themes, such as
+asciiship, run git before drawing the prompt. In my measurements, each Enter
+inside a git repo cost ~35 ms with asciiship and ~1 ms with pure.
+
+`PURE_GIT_PULL=0` stops pure from running `git fetch` in the background to check
+the remote for new commits. Delete it to turn that back on. Other options are in
+[pure's README](https://github.com/sindresorhus/pure#options).
+
+### Homebrew
+
+`eval "$(/opt/homebrew/bin/brew shellenv)"` in `~/.zprofile` works, but:
+
+- It runs brew on every login shell (~14 ms).
+- It adds Homebrew's completions to `fpath` from `~/.zprofile`, which only
+  login shells read. Login and non-login shells (Neovim's `:terminal`, a plain
+  `zsh`, shells that editors or AI tools start) then get different `fpath`s,
+  and zimfw rebuilds its completion cache (~200 ms) whenever the two kinds
+  alternate.
+
+The faster way is to write out the lines `brew shellenv` prints, and add
+Homebrew's completions in `~/.zshrc` instead. The prefix is `/opt/homebrew` on
+Apple Silicon and `/usr/local` on Intel, so use your own output and prefix,
+not someone else's.
+
+1. Print your `brew shellenv` lines, minus the two that set `fpath`
+   (`fpath[1,0]=".../share/zsh/site-functions"` and `export FPATH`). On Intel,
+   use `/usr/local/bin/brew`:
+
+   ```
+   PATH=/usr/bin:/bin /opt/homebrew/bin/brew shellenv zsh | grep -v -e '^fpath' -e '^export FPATH'
+   ```
+
+   The plain `PATH` is there because `brew shellenv` prints nothing when
+   Homebrew is already first on `PATH`. Replace the `eval` line in
+   `~/.zprofile` with the output.
+2. Add this to `~/.zshrc`, before the zimfw block. On Intel, use
+   `/usr/local/share/zsh/site-functions`.
+
+   ```
+   # Keep PATH and fpath free of duplicates
+   typeset -U path PATH fpath
+   # Homebrew's completions, for every zsh, login or not
+   fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+   ```
+
+If Homebrew moves or `brew shellenv` changes what it prints, redo step 1.
+
+### Coming from oh-my-zsh
+
+A few things work differently after the switch:
+
+- `>` won't overwrite an existing file (`NO_CLOBBER`). Use `>|` to overwrite.
+- `^`, `#` and `~` are glob operators (`EXTENDED_GLOB`), so quote things like
+  `HEAD^`: `git show 'HEAD^'`.
+- The up arrow steps through all of history, not only the commands that start
+  with what you've typed.
+- oh-my-zsh's git aliases are gone, so define the ones you use.
+- Reload with `exec zsh`, not `source ~/.zshrc`. Sourcing it again runs
+  `compinit` again, and zimfw prints a warning.
+
+### Startup time
+
+On my Mac (Apple Silicon, zsh 5.9, Ghostty 1.4.0), the time from opening a
+Ghostty window to the prompt went from ~110 ms with oh-my-zsh to ~77 ms with
+this setup. With an empty zsh config it's ~47 ms, most of it macOS's
+`login(1)`.
+
+To see where your own startup goes, put `zmodload zsh/zprof` at the top of
+`~/.zshrc` and `zprof` at the bottom, then open a new shell. Setup for tools
+like nvm, conda or pyenv is common and often slower than oh-my-zsh itself, so
+measure before switching frameworks.
