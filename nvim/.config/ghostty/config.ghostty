@@ -4,3 +4,23 @@
 # Follows the macOS light/dark appearance. Keep in sync with the Neovim
 # colorscheme in ~/.config/nvim/lua/eraffo/colors.lua. List themes: ghostty +list-themes
 theme = light:Gruvbox Light,dark:Gruvbox Dark Hard
+
+# Start zsh directly as a login shell. On macOS Ghostty runs every command
+# through `/usr/bin/login -flp <user>`. Left unset, it adds a bash step
+# (`/bin/bash --noprofile --norc -c "exec -l <your shell>"`); with `direct:`
+# login starts zsh itself, ~2 ms sooner per new window. Shell integration
+# still loads because Ghostty detects zsh from the command's name.
+# This assumes zsh is your shell. On a machine without zsh, or one using
+# another shell (e.g. Ubuntu with bash), delete this line so Ghostty goes
+# back to your account's shell.
+command = direct:/bin/zsh -l
+
+# Quick terminal (macOS): Cmd+` from any app shows a drop-down terminal and
+# hides it again. It keeps the same session between toggles, so after the
+# first use it appears without starting a new shell; the animation is turned
+# off so it shows at once. Global keybinds need Accessibility permission
+# (System Settings > Privacy & Security > Accessibility), which Ghostty asks
+# for when it loads this config. Being global, Cmd+` no longer cycles through
+# a single app's windows anywhere in macOS.
+keybind = global:cmd+backquote=toggle_quick_terminal
+quick-terminal-animation-duration = 0
