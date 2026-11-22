@@ -22,11 +22,23 @@ unfold_config() {
     mkdir -p "$cfg"
 }
 
+# Never overwrites an earlier backup.
+backup() {
+    [[ -e $1.pre-dotfiles || -L $1.pre-dotfiles ]] &&
+        { echo "$1.pre-dotfiles already exists; move it first"; exit 1; }
+    mv "$1" "$1.pre-dotfiles"
+    echo "Moved $1 to $1.pre-dotfiles"
+}
+
 # Move aside files that would block stow, then link the configs.
 link() {
     unfold_config
-    stow -n "${PACKAGES[@]}" 2>&1 | sed -n 's/.*existing target \(is not owned by stow: \)\{0,1\}\([^ ]*\).*/\2/p' |
-        while read -r f; do mv "$TARGET/$f" "$TARGET/$f.pre-dotfiles"; done
+    local f
+    while read -r f; do
+        backup "$TARGET/$f"
+        [[ $f == .zshrc ]] && echo "  Copy what you need from it into ~/.zshrc.local"
+    done < <(stow -n "${PACKAGES[@]}" 2>&1 |
+        sed -n 's/.*existing target \(is not owned by stow: \)\{0,1\}\([^ ]*\).*/\2/p')
     stow "${PACKAGES[@]}"
 }
 
@@ -40,7 +52,7 @@ mac() {
     [[ -d /Applications/Ghostty.app ]] || brew install --cask ghostty
     # This location overrides ~/.config/ghostty.
     for f in "$HOME/Library/Application Support/com.mitchellh.ghostty/config"{,.ghostty}; do
-        [[ -f $f ]] && mv "$f" "$f.pre-dotfiles"
+        [[ -f $f ]] && backup "$f"
     done
     plug && link
     nvim --headless "+PlugInstall --sync" +qall
