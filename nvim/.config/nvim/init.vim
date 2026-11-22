@@ -43,7 +43,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'onsails/lspkind-nvim'
 Plug 'karb94/neoscroll.nvim'
 Plug 'windwp/nvim-autopairs'
-Plug 'ellisonleao/gruvbox.nvim'
+Plug 'miikanissi/modus-themes.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
 Plug 'bfrg/vim-cpp-modern'
 Plug 'mg979/vim-visual-multi'
