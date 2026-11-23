@@ -8,7 +8,3 @@ command = direct:/bin/zsh -l
 # Drop-down terminal from any app (needs Accessibility permission).
 keybind = global:cmd+backquote=toggle_quick_terminal
 quick-terminal-animation-duration = 0
-
-# Page Up/Down (fn+up/down) scroll the scrollback instead of reaching the shell.
-keybind = page_up=scroll_page_up
-keybind = page_down=scroll_page_down
