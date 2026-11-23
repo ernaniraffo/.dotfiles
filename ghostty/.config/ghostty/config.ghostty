@@ -8,3 +8,9 @@ command = direct:/bin/zsh -l
 # Drop-down terminal from any app (needs Accessibility permission).
 keybind = global:cmd+backquote=toggle_quick_terminal
 quick-terminal-animation-duration = 0
+
+# Page Up/Down scroll the scrollback and still reach programs like Neovim.
+keybind = unconsumed:page_up=scroll_page_up
+keybind = unconsumed:page_down=scroll_page_down
+# Otherwise each Page Up press jumps back to the bottom before scrolling.
+scroll-to-bottom = no-keystroke
