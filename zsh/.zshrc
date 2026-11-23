@@ -19,4 +19,9 @@ if [[ ! $ZIM_HOME/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-$HOME}/.zimrc} ]]; 
 fi
 source $ZIM_HOME/init.zsh
 
+# zimfw's input module makes Page Up/Down walk history; make them do nothing
+# at the prompt instead (programs like Neovim still get them).
+bindkey $key_info[PageUp] redisplay
+bindkey $key_info[PageDown] redisplay
+
 [[ -r ~/.zshrc.local ]] && source ~/.zshrc.local
