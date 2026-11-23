@@ -19,4 +19,9 @@ if [[ ! $ZIM_HOME/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-$HOME}/.zimrc} ]]; 
 fi
 source $ZIM_HOME/init.zsh
 
+# Ghostty scrolls on Page Up/Down; stop zimfw's input module from also
+# stepping through history on them.
+bindkey $key_info[PageUp] redisplay
+bindkey $key_info[PageDown] redisplay
+
 [[ -r ~/.zshrc.local ]] && source ~/.zshrc.local
