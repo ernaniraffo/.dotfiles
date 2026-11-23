@@ -12,5 +12,8 @@ quick-terminal-animation-duration = 0
 # Page Up/Down scroll the scrollback and still reach programs like Neovim.
 keybind = unconsumed:page_up=scroll_page_up
 keybind = unconsumed:page_down=scroll_page_down
+# Home/End jump to the top/bottom of the scrollback, like Apple's Terminal.
+keybind = unconsumed:home=scroll_to_top
+keybind = unconsumed:end=scroll_to_bottom
 # Otherwise each Page Up press jumps back to the bottom before scrolling.
 scroll-to-bottom = no-keystroke
