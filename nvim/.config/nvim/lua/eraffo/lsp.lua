@@ -1,5 +1,11 @@
 vim.lsp.config('*', { capabilities = require('cmp_nvim_lsp').default_capabilities() })
-vim.lsp.enable({ 'clangd', 'pyright', 'perlnavigator' })
+-- Not in nvim-lspconfig; settings from the tree-sitter-metal README.
+vim.lsp.config('metal_analyzer', {
+    cmd = { 'metal-analyzer' },
+    filetypes = { 'metal' },
+    root_markers = { 'metalfmt.toml', '.clang-format', 'Package.swift', '.git' },
+})
+vim.lsp.enable({ 'clangd', 'pyright', 'perlnavigator', 'metal_analyzer' })
 
 -- Semantic tokens recolor files up to a second after opening.
 vim.lsp.semantic_tokens.enable(false)

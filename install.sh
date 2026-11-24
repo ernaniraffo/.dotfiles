@@ -57,6 +57,10 @@ mac() {
     plug && link
     nvim --headless "+PlugInstall --sync" +qall
     "$(brew --prefix)/bin/npm" install -g pyright perlnavigator-server
+    # Not in Homebrew. Its diagnostics need Xcode's Metal toolchain.
+    mkdir -p ~/.local/bin
+    curl -fL "https://github.com/computer-graphics-tools/metal-analyzer/releases/latest/download/metal-analyzer-$(uname -m | sed s/arm64/aarch64/)-apple-darwin.tar.gz" |
+        tar -C ~/.local/bin -xz
 }
 
 linux() {
