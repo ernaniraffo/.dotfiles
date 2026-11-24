@@ -1,5 +1,4 @@
 vim.o.winborder = 'rounded'
-vim.filetype.add({ extension = { metal = 'metal' } })
 
 require('eraffo.colors')
 require('eraffo.lsp')
