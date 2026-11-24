@@ -23,7 +23,8 @@ rerun `./install.sh` after pulling to switch it over.
 - [tree-sitter CLI](https://github.com/tree-sitter/tree-sitter) to build parsers
 - Language servers: [clangd](https://clangd.llvm.org) (C/C++),
   [pyright](https://github.com/microsoft/pyright) (Python),
-  [Perl Navigator](https://github.com/bscan/PerlNavigator) (Perl)
+  [Perl Navigator](https://github.com/bscan/PerlNavigator) (Perl),
+  [metal-analyzer](https://github.com/computer-graphics-tools/metal-analyzer) (Metal, macOS)
 - [Node.js](https://nodejs.org) to install pyright and Perl Navigator
 
 ## zsh
