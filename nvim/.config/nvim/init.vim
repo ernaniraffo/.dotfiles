@@ -24,11 +24,6 @@ set scrolloff=8
 set undofile
 set mouse=a
 
-" Don't continue comments on <Enter> or o/O.
-augroup eraffo | autocmd!
-autocmd FileType * setlocal formatoptions-=r formatoptions-=o
-augroup END
-
 call plug#begin('~/.config/nvim/plugged')
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -48,6 +43,14 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
 Plug 'bfrg/vim-cpp-modern'
 Plug 'mg979/vim-visual-multi'
 call plug#end()
+
+" After plug#end, so these run after the ftplugin and syntax autocmds.
+augroup eraffo | autocmd!
+" Edit Metal as C++ (clangd can't parse it).
+autocmd FileType metal runtime! ftplugin/cpp.vim indent/cpp.vim | setlocal syntax=cpp
+" Don't continue comments on <Enter> or o/O.
+autocmd FileType * setlocal formatoptions-=r formatoptions-=o
+augroup END
 
 let g:cpp_member_highlight = 1
 " macOS Mission Control takes <C-Down>/<C-Up>.
