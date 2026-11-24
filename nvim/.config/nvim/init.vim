@@ -46,6 +46,7 @@ Plug 'windwp/nvim-autopairs'
 Plug 'miikanissi/modus-themes.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
 Plug 'bfrg/vim-cpp-modern'
+Plug 'Willinki/tree-sitter-metal'
 Plug 'mg979/vim-visual-multi'
 call plug#end()
 
